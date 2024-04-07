@@ -1,0 +1,52 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+/src/main/resources/static/files/
+/files/65f9d7313076ae05c80d4c5f/
+/files/65f9f074b9a0a7196434ed85/
+/files/65fb03fb9b4983001acf2fc0/
+/files/65fb04559b4983001acf2fc4/
+/files/65fb06519b4983001acf2fc8/
+/files/65fb07369b4983001acf2fd0/
+/files/65fb07859b4983001acf2fd4/
+/files/65fb08319b4983001acf2fd8/
+/files/66c4a66e-6f39-4a38-b15f-3f41a2ad3881/
+/files/a6d91223-8d6f-46ef-accd-13f5f4708526/
+/files/fb182c9e-320c-45ae-982d-12a3f72ce747/
+/files/ff63af53-04bf-45d2-96ad-d8679ac50ee9/
+/files/postId/
+/files/root/
