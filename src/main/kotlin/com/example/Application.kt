@@ -38,7 +38,7 @@ fun Application.module() {
     configureMonitoring()
     configureSerialization()
     configureSession2()
-//    configureSockets2()
+    configureSockets2()
 
     configureRouting2(
         hashingService = hashingService,

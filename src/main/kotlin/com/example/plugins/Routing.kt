@@ -60,7 +60,7 @@ fun Application.configureRouting2(
         )
         home2()
         getAllMessages2(roomController)
-//        chatRoute2(roomController)
+        chatRoute2(roomController)
         materialFiles(
             materialRepository = materialRepository
         )
