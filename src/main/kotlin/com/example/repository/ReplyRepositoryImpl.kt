@@ -3,22 +3,21 @@ package com.example.repository
 import com.example.data.models.Reply
 import com.example.data.models.Tag
 import com.example.data.requests.ReplyRequest
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.example.data.responses.ReplyResponse
 import org.litote.kmongo.coroutine.CoroutineDatabase
 
 class ReplyRepositoryImpl(db: CoroutineDatabase) : ReplyRepository {
     private val replyCollection = db.getCollection<Reply>()
 
-    override suspend fun createReply(request: ReplyRequest.CreateRequest): Boolean {
-        return replyCollection.insertOne(request.reply).wasAcknowledged()
+    override suspend fun createReply(response: ReplyResponse): Boolean {
+        return replyCollection.insertOne(response.toEntity()).wasAcknowledged()
     }
 
-    override fun fetchReplies(request: ReplyRequest.FetchRequest): Flow<List<Reply>> = flow {
+    override suspend fun fetchReplies(request: ReplyRequest.FetchRequest): List<Reply> {
         val replies = replyCollection.find().toList().filter{
             it.postId == request.postId
         }
-        emit(replies)
+        return replies
     }
 
     override suspend fun updateReply(request: ReplyRequest.UpdateRequest): Boolean {

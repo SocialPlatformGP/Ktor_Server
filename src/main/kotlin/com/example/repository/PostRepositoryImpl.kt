@@ -19,7 +19,7 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
     private val userCollection = db.getCollection<User>()
     private val tagCollection = db.getCollection<Tag>()
     override suspend fun createPost(postRequest: PostResponse): Boolean {
-
+        println("*************************************\ncreate post called: $postRequest\n**********************")
         return postCollection.insertOne(postRequest.toEntity()).wasAcknowledged()
 
     }

@@ -30,7 +30,7 @@ fun Route.createReply(
             call.respond(HttpStatusCode.Conflict, message = "Fields required")
             return@post
         }
-        val wasAcknowledged = replyRepository.createReply(request)
+        val wasAcknowledged = replyRepository.createReply(request.reply.toResponse())
         if (!wasAcknowledged) {
             call.respond(HttpStatusCode.Conflict, message = "Error Creating the reply")
             return@post
@@ -43,15 +43,15 @@ fun Route.createReply(
 fun Route.fetchReplies(
     replyRepository: ReplyRepository
 ) {
-    get("fetchReplies") {
+    post("fetchReplies") {
         val request = call.receiveNullable<ReplyRequest.FetchRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
-            return@get
+            return@post
         }
-        replyRepository.fetchReplies(request).collect{
-            call.respond(HttpStatusCode.OK, it)
-        }
-
+        println("\n\n\n\n\n\n\n\n\n\nrequesT: $request\n\n\n\n\n\n\n\n\n\n\n\n")
+        val result = replyRepository.fetchReplies(request)
+        println("result: $result")
+        call.respond(HttpStatusCode.OK, result)
     }
 
 }
