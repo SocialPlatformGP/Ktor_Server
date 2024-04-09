@@ -111,15 +111,15 @@ fun Route.deleteReply(
 fun Route.upvoteReply(
     replyRepository: ReplyRepository
 ) {
-    put("upvoteReply") {
+    post("upvoteReply") {
         val request = call.receiveNullable<ReplyRequest.UpvoteRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-            return@put
+            return@post
         }
         val wasAcknowledged = replyRepository.upvoteReply(request)
         if (!wasAcknowledged) {
             call.respond(HttpStatusCode.Conflict, message = "Error Upvoting the reply")
-            return@put
+            return@post
         }
         call.respond(HttpStatusCode.OK, message = "Reply upvoted successfully")
 
