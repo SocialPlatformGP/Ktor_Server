@@ -8,4 +8,6 @@ interface AuthRepository {
     suspend fun createUser(user: User): User?
     suspend fun findUserByEmail(email:String): User?
     suspend fun findUserById(id:String): User?
+
+    suspend fun getAllUsers(): List<User>
 }

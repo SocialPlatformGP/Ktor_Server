@@ -1,9 +1,6 @@
 package com.example.plugins
 
-import com.example.repository.AuthRepository
-import com.example.repository.MaterialRepository
-import com.example.repository.PostRepository
-import com.example.repository.ReplyRepository
+import com.example.repository.*
 import com.example.room.RoomController
 import com.example.routes.*
 import com.example.security.TokenService
@@ -20,7 +17,8 @@ fun Application.configureRouting2(
     tokenConfig: TokenConfig,
     roomController: RoomController,
     materialRepository: MaterialRepository,
-    replyRepository: ReplyRepository
+    replyRepository: ReplyRepository,
+    messageDataSource: MessageDataSource
 ) {
 
     routing {
@@ -58,9 +56,15 @@ fun Application.configureRouting2(
         getSignedUser2(
             authRepository = authRepository
         )
+        getAllUser(
+            authRepository = authRepository
+        )
         home2()
-        getAllMessages2(roomController)
-//        chatRoute2(roomController)
+
+        chatRoute2(
+            roomController,
+            messageDataSource
+        )
         materialFiles(
             materialRepository = materialRepository
         )

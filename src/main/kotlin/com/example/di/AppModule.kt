@@ -19,7 +19,7 @@ val appModule2 = module {
     single<MessageDataSource>{ MessageDataSourceImpl(get()) }
     single<TokenService>{ JwtService() }
     single {
-        RoomController(get())
+        RoomController(get(), get())
     }
 
     single {

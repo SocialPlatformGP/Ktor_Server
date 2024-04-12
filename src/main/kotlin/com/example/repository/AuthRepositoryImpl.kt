@@ -25,5 +25,11 @@ class AuthRepositoryImpl(db: CoroutineDatabase) : AuthRepository {
     override suspend fun findUserById(id: String): User? =
         users.findOne(User::id eq id)
 
+    override suspend fun getAllUsers(): List<User> {
+        val result = users.find().toList()
+        println("Result: $result")
+        return result
+    }
+
 }
 data class File(val name:String,val stream:InputStream)

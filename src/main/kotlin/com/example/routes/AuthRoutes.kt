@@ -280,6 +280,18 @@ fun Route.getSignedUser2(
 }
 
 
+fun Route.getAllUser(
+    authRepository: AuthRepository,
+) {
+    get("getAllUsers") {
+        val users = authRepository.getAllUsers()
+        println("users" + users)
+        call.respond(
+            status = HttpStatusCode.OK,
+            users.map { it.toResponse() }
+        )
+    }
+}
 
 
 
