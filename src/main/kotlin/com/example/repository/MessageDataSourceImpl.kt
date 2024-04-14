@@ -113,7 +113,13 @@ class MessageDataSourceImpl(
                         pic_url = recent_room.pic_url,
                         senderName = "you"
                     )
-                } else throw Exception("User not found")
+                } else {
+                    recent_room.toResponse(
+                        title = recent_room.title,
+                        pic_url = recent_room.pic_url,
+                        senderName = userName
+                    )
+                }
             }
         }
 
