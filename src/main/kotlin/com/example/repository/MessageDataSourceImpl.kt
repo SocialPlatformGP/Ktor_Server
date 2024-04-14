@@ -3,6 +3,7 @@ package com.example.repository
 import com.example.data.models.*
 import com.example.data.requests.ChatRequest
 import com.example.data.responses.ChatResponse
+import com.example.utils.Constants.BASE_URL
 import com.example.utils.FileUtils
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.coroutine.CoroutineDatabase
@@ -48,7 +49,9 @@ class MessageDataSourceImpl(
             if (!folder.exists()) {
                 folder.mkdirs()
             }
-            FileUtils.saveByteArrayToFile(request.groupAvatar, "files/rooms/${room.id}/" + UUID.randomUUID().toString()).path
+            val file_id = UUID.randomUUID().toString()
+            FileUtils.saveByteArrayToFile(request.groupAvatar, "files/rooms/${room.id}/" + file_id)
+            "$BASE_URL/rooms/${room.id}/$file_id"
 
         } else ""
         rooms.insertOne(room).wasAcknowledged().let { if (!it) println("Room not created") }
