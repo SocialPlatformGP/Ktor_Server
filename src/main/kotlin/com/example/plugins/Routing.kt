@@ -65,6 +65,12 @@ fun Application.configureRouting2(
             roomController,
             messageDataSource
         )
+        RecentRoomsRoute(
+            messageDataSource = messageDataSource
+        )
+        RoomRoute(
+            messageDataSource = messageDataSource
+        )
         materialFiles(
             materialRepository = materialRepository
         )

@@ -58,10 +58,10 @@ fun Route.chatRoute2(
 
     }
     post("/isRoomExist") {
-        val request = call.receiveNullable<ChatRequest.CheckRoomExists>() ?:return@post call.respond(HttpStatusCode.BadRequest)
+        val request = call.receiveNullable<ChatRequest.RoomExistRequest>() ?:return@post call.respond(HttpStatusCode.BadRequest)
         val isRoomExist = messageDataSource.checkRoomExists(request)
         println("Is Room Exist: $isRoomExist")
-        val response = ChatResponse.CheckRoomExists(isRoomExist)
+        val response = ChatResponse.RoomExistResponse(isRoomExist)
         println("Response: $response")
         call.respond(HttpStatusCode.OK, response)
     }
@@ -77,4 +77,28 @@ fun Route.chatRoute2(
         call.respond(HttpStatusCode.OK, response)
     }
 }
+fun Route.RecentRoomsRoute(
+    messageDataSource: MessageDataSource
+){
+    post("/getRecentRooms"){
+        val request = call.receiveNullable<ChatRequest.GetAllRecentRooms>() ?: return@post call.respond(HttpStatusCode.BadRequest)
+        println("\n Request: $request \n")
+        val recentRooms = messageDataSource.getRecentRooms(request)
+        println("\n Recent Rooms: $recentRooms \n")
+        call.respond(HttpStatusCode.OK, recentRooms)
+    }
+}
+fun Route.RoomRoute(
+    messageDataSource: MessageDataSource
+){
+    post("/createGroupRoom"){
+        val request = call.receiveNullable<ChatRequest.CreateGroupRoom>() ?: return@post call.respond(HttpStatusCode.BadRequest)
+        println("\n Request: $request \n")
+        val roomId = messageDataSource.createGroupRoom(request)
+        println("\n RoomId: $roomId \n")
+        call.respond(HttpStatusCode.OK, roomId)
+
+    }
+}
+
 

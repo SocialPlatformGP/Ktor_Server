@@ -6,10 +6,7 @@ import kotlinx.serialization.Serializable
 import java.io.File
 import java.util.*
 
-@Serializable
-data class MaterialRequest(
-    val path: String = "", // folder id or path to get all files and folders inside it
-)
+
 @Serializable
 data class CreateFolderRequest (
     val name: String = "",

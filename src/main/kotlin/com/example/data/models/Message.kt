@@ -1,7 +1,6 @@
 package com.example.data.models
 
-import com.example.data.responses.MessageResponse
-import de.undercouch.bson4jackson.types.Timestamp
+import com.example.data.responses.ChatResponse
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -17,7 +16,7 @@ data class Message(
     @BsonId
     val id :String =ObjectId().toString()
 ){
-    fun toResponse(senderName: String, senderPicUrl: String) = MessageResponse(
+    fun toResponse(senderName: String, senderPicUrl: String) = ChatResponse.MessageResponse(
         content = content,
         createdAt = createdAt,
         roomId = roomId,

@@ -1,11 +1,11 @@
 package com.example.routes
 
-import com.example.data.requests.SignUpRequest
 import com.example.data.responses.AuthResponse
 import com.example.data.models.User
 import com.example.data.requests.CheckExistUserRequest
 import com.example.data.requests.GetUserRequest
 import com.example.data.requests.LoginRequest
+import com.example.data.requests.SignUpRequest
 import com.example.data.responses.IsEmailAvailableResponse
 import com.example.data.responses.UserResponse
 import com.example.repository.AuthRepository

@@ -58,13 +58,13 @@ fun Route.materialFiles(
     }
 
     post("get_files") {
-        val request = call.receiveNullable<MaterialRequest>()
+        val request = call.receiveNullable<MaterialRequest.GetMaterialInPath>()
         if(request == null){
             println("****************** 00${request}***********************")
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
             return@post
         }
-        println("****************** 00${request.path}***********************")
+        println("****************** 00${request}***********************")
         val response = materialRepository.getMaterialResponse(request.path.trim())
         println("****************** $response***********************")
         call.respond(
