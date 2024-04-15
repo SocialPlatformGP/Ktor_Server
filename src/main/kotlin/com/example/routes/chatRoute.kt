@@ -96,8 +96,7 @@ fun Route.RoomRoute(
         println("\n Request: $request \n")
         val roomId = messageDataSource.createGroupRoom(request)
         println("\n RoomId: $roomId \n")
-        call.respond(HttpStatusCode.OK, roomId)
-
+        call.respond(HttpStatusCode.OK, ChatResponse.CreateGroupRoom(roomId))
     }
 }
 

@@ -44,4 +44,8 @@ sealed class ChatResponse {
     data class GetAllRecentRooms(
         val recentRooms: List<RecentRoomResponse>
     ) : ChatResponse()
+    @Serializable
+    data class CreateGroupRoom(
+        val roomId: String
+    ) : ChatResponse()
 }
