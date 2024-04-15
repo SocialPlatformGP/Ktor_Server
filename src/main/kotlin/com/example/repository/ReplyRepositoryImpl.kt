@@ -24,7 +24,7 @@ class ReplyRepositoryImpl(db: CoroutineDatabase) : ReplyRepository {
         postCollection.updateOne(
             Post::id eq response.postId,
             setValue(
-                Post::votes, post.replyCount + 1
+                Post::replyCount, post.replyCount + 1
             )
         )
         return replyCollection.insertOne(response.toEntity()).wasAcknowledged()
