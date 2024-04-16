@@ -1,9 +1,17 @@
 package com.example.room
 
 import com.example.data.models.Message
+import com.example.data.requests.ChatRequest
+import com.example.data.responses.ChatResponse
 import com.example.repository.AuthRepository
 import com.example.repository.MessageDataSource
+import com.example.routes.Messego
+import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentHashMap
@@ -17,32 +25,42 @@ class RoomController(
     fun onJoin(
         userId: String,
         sessionId: String,
-        socket: WebSocketSession
+        roomId :String,
+        socket: DefaultWebSocketServerSession
     ) {
+        println("On Join: $userId $sessionId $socket")
         if (members.containsKey(userId)) {
             throw MemberAlreadyExistsException()
         }
-        members[userId] = Member(userId, sessionId, socket)
+        members[userId] = Member(userId, sessionId,roomId, socket)
+
+        println("Members: $members")
     }
 
     suspend fun sendMessage(
-        message: Message
+        message: ChatRequest.SendMessage
     ) {
-        val userData = authRepository.findUserById(message.senderId)
-        val messageResponse = message.toResponse(
-            senderName = userData?.firstName + " " + userData?.lastName,
-            senderPicUrl = userData?.profilePictureURL ?: ""
-        )
-        println("Message Response: $message")
-        val result = messageDataSource.getRoom(message.roomId)
-        println("Result: $result")
-        val keys = result.members.keys
-        println("Keys: $keys")
-        keys.forEach {
-            val member = members[it]
-            member?.socket?.send(Frame.Text(Json.encodeToString(messageResponse)))
+        println("Sending message: $message")
+        members.values.forEach {
+            println("Sending message to: $it")
+            it.socket.outgoing.send(Frame.Text(Json.encodeToString(message)))
         }
-        messageDataSource.addMessageToRoom(message)
+//        val userData = authRepository.findUserById(message.senderId)
+//        val messageResponse = message.toResponse(
+//            senderName = userData?.firstName + " " + userData?.lastName,
+//            senderPicUrl = userData?.profilePictureURL ?: ""
+//        )
+//        println("Message Response: $message")
+//        val result = messageDataSource.getRoom(message.roomId)
+//        println("Result: $result")
+//        val keys = result.members.keys
+//        println("Keys: $keys")
+//        keys.forEach {
+//            val member = members[it]
+//            member?.socket?.sendSerialized())
+//        }
+
+//        messageDataSource.addMessageToRoom(message)
         //***********
 //        members.values.forEach { member: Member ->
 //            messageDataSource.addMessageToRoom(message)
@@ -50,7 +68,6 @@ class RoomController(
 //            member.socket.send(Frame.Text(parsedMessage))
 //        }
     }
-
 
 
     suspend fun removeMember(username: String) {

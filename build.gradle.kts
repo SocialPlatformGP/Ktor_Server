@@ -81,6 +81,7 @@ dependencies {
 
     //
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.8")
 
 
 }

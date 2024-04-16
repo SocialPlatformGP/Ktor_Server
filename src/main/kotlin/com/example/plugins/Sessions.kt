@@ -1,6 +1,5 @@
 package com.example.plugins
 
-import com.example.utils.Constants.ROOM_ID
 import io.ktor.server.application.*
 import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins
 import io.ktor.server.sessions.*
@@ -12,19 +11,22 @@ fun Application.configureSession2() {
     }
     intercept(Plugins) {
         if (call.sessions.get<ChatSession>() == null) {
-            val username = call.parameters["username"]?: "unknown_user"
-            val roomId = call.parameters["room_id"]?: "unknown_room"
+            val userId = call.parameters["userid"] ?: "unknown_user"
+            val roomId = call.parameters["roomid"] ?: "unknown_room"
             call.sessions.set(
                 ChatSession(
-                    username,
+                    userId,
                     generateNonce(),
                     roomId
-                ))
+                )
+            )
+            println("Session created for $userId")
         }
     }
 }
+
 data class ChatSession(
-    val userName: String,
-    val sessionId :String,
-    val roomId :String
-    )
+    val userId: String,
+    val sessionId: String,
+    val roomId: String
+)
