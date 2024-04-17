@@ -37,7 +37,6 @@ fun Application.module() {
     configureSerialization()
     configureSession2()
     configureSockets2()
-
     configureRouting2(
         hashingService = hashingService,
         authRepository = authRepository,

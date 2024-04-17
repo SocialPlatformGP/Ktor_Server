@@ -1,5 +1,6 @@
-package com.example.data.models
+package com.example.data.models.reply
 
+import com.example.data.models.post.now
 import com.example.data.responses.ReplyResponse
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone

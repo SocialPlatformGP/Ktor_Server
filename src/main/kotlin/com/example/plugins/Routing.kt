@@ -2,7 +2,11 @@ package com.example.plugins
 
 import com.example.repository.*
 import com.example.room.RoomController
-import com.example.routes.*
+import com.example.routes.auth.*
+import com.example.routes.chat.*
+import com.example.routes.material.*
+import com.example.routes.post.*
+import com.example.routes.reply.replyRouting
 import com.example.security.TokenService
 import com.example.security.hashing.HashingService
 import com.example.security.token.TokenConfig
@@ -20,81 +24,12 @@ fun Application.configureRouting2(
     replyRepository: ReplyRepository,
     messageDataSource: MessageDataSource
 ) {
-
     routing {
-        signUp2(
-            hashingService = hashingService,
-            authRepository = authRepository,
-            tokenService = tokenService,
-            tokenConfig = tokenConfig
-        )
-
-        signIn2(
-            authRepository = authRepository,
-            tokenService = tokenService,
-            hashingService = hashingService,
-            tokenConfig = tokenConfig
-        )
-        createPost2(
-            postRepository = postRepository
-        )
-        getAllPosts2(
-            postRepository = postRepository
-        )
-        upVotePost2(
-            postRepository = postRepository
-        )
-        downVotePost2(
-            postRepository = postRepository
-        )
-        deletePost2(
-            postRepository = postRepository
-        )
-        updatePost2(
-            postRepository = postRepository
-        )
-        getSignedUser2(
-            authRepository = authRepository
-        )
-        getAllUser(
-            authRepository = authRepository
-        )
-        home2()
-
-        chatRoute2(
-            roomController,
-            messageDataSource
-        )
-        RecentRoomsRoute(
-            messageDataSource = messageDataSource
-        )
-        RoomRoute(
-            messageDataSource = messageDataSource
-        )
-        materialFiles(
-            materialRepository = materialRepository
-        )
-        createReply(
-            replyRepository = replyRepository
-        )
-        fetchReplies(
-            replyRepository = replyRepository
-        )
-        updateReply(
-            replyRepository = replyRepository
-        )
-        deleteReply(
-            replyRepository = replyRepository
-        )
-        upvoteReply(
-            replyRepository = replyRepository
-        )
-        downvoteReply(
-            replyRepository = replyRepository
-        )
-//        reportReply(
-//            replyRepository = replyRepository
-//        )
+        authRouting(hashingService,authRepository,tokenService,tokenConfig)
+        chatRouting(roomController,messageDataSource)
+        postRouting(postRepository)
+        materialRouting(materialRepository)
+        replyRouting(replyRepository)
     }
 
 }

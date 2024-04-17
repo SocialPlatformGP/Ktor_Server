@@ -1,4 +1,4 @@
-package com.example.data.models
+package com.example.data.models.post
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId

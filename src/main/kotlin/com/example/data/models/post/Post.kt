@@ -1,5 +1,6 @@
-package com.example.data.models
+package com.example.data.models.post
 
+import com.example.data.models.user.User
 import com.example.data.responses.PostResponse
 import kotlinx.datetime.*
 

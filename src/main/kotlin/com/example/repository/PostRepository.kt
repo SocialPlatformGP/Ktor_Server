@@ -1,11 +1,8 @@
 package com.example.repository
 
-import com.example.data.models.Post
-import com.example.data.models.Tag
-import com.example.data.requests.CreatePostRequest
+import com.example.data.models.post.Tag
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
-import kotlinx.datetime.LocalDateTime
 
 interface PostRepository {
     suspend fun createPost(postRequest: PostResponse): Boolean

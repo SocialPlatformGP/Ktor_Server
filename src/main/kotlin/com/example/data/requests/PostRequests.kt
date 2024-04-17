@@ -1,6 +1,6 @@
 package com.example.data.requests
 
-import com.example.data.models.Post
+import com.example.data.models.post.Post
 import kotlinx.serialization.Serializable
 
 sealed class PostRequest{

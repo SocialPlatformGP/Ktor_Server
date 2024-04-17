@@ -1,0 +1,65 @@
+package com.example.utils
+
+sealed class EndPoint(val route: String) {
+    object Chat {
+        object Room {
+            data object RoomExist : EndPoint("/isRoomExist")
+            data object CreateGroupRoom : EndPoint("/createGroupRoom")
+            data object GetRoomDetails : EndPoint("/getRoomDetails")
+            data object UpdateRoomAvatar : EndPoint("/updateRoomAvatar")
+            data object UpdateRoomName : EndPoint("/updateRoomName")
+            data object AddMembers : EndPoint("/addMembers")
+            data object RemoveMember : EndPoint("/removeMember")
+        }
+
+        object Messages {
+            data object FetchChatMessages : EndPoint("/fetchChatMessages")
+        }
+
+        object RecentRooms {
+            data object GetAllRecentRooms : EndPoint("/getRecentRooms")
+        }
+
+        object WebSocket {
+            data object ChatSocket : EndPoint("/chatSocket")
+        }
+    }
+
+    object Auth {
+        data object CheckAvailability : EndPoint("/isEmailAvailable")
+        data object GetSignedUser : EndPoint("/getSignedUser")
+        data object GetAllUsers : EndPoint("/getAllUsers")
+        data object SignUp : EndPoint("/signup")
+        data object SignIn : EndPoint("/signin")
+        data object GetUsersByIds: EndPoint("/getUsersByIds")
+    }
+    object Post {
+        data object CreatePost : EndPoint("/createPost")
+        data object GetAllPosts : EndPoint("/getAllPosts")
+        data object DeletePost : EndPoint("/deletePost")
+        data object UpdatePost : EndPoint("/updatePost")
+        data object GetNewPosts : EndPoint("/getNewPosts")
+        data object UpvotePost : EndPoint("/upvotePost")
+        data object DownvotePost : EndPoint("/downvotePost")
+        object Tags {
+            data object InsertTag : EndPoint("/insertTag")
+            data object GetAllTags : EndPoint("/getAllTags")
+        }
+    }
+    object Reply{
+        data object CreateReply : EndPoint("/createReply")
+        data object FetchReplies : EndPoint("/fetchReplies")
+        data object UpdateReply : EndPoint("/updateReply")
+        data object UpvoteReply : EndPoint("/upvoteReply")
+        data object DownvoteReply : EndPoint("/downvoteReply")
+        data object DeleteReply : EndPoint("/deleteReply")
+
+    }
+    object Media {
+        data object UploadFolder : EndPoint("/uploadFolder")
+        data object UploadFile : EndPoint("/uploadFile")
+        data object GetFiles : EndPoint("/get_files")
+    }
+
+
+}

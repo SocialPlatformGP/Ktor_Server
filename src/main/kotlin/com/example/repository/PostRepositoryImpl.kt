@@ -1,10 +1,9 @@
 package com.example.repository
 
-import com.example.data.models.Post
-import com.example.data.models.Tag
-import com.example.data.models.User
-import com.example.data.models.now
-import com.example.data.requests.CreatePostRequest
+import com.example.data.models.post.Post
+import com.example.data.models.post.Tag
+import com.example.data.models.user.User
+import com.example.data.models.post.now
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 import kotlinx.datetime.LocalDateTime
@@ -12,7 +11,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.util.idValue
 
 class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
     private val postCollection = db.getCollection<Post>()

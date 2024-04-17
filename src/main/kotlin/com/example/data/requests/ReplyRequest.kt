@@ -1,6 +1,6 @@
 package com.example.data.requests
 
-import com.example.data.models.Reply
+import com.example.data.models.reply.Reply
 import kotlinx.serialization.Serializable
 
 sealed class ReplyRequest{

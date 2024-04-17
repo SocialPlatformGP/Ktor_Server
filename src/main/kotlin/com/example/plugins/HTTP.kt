@@ -20,8 +20,7 @@ fun Application.configureHTTP() {
         allowHost("localhost:27017")
         allowXHttpMethodOverride()
         allowSameOrigin = true
-//        allowHeader(HttpHeaders.json)
-//        allowHeader(HttpHeaders.ContentType.json)
+
         anyHost()
     }
     install(HttpsRedirect) {
