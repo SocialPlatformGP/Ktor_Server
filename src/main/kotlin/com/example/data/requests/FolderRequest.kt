@@ -1,10 +1,8 @@
 package com.example.data.requests
 
-import com.example.data.models.MaterialFile
-import com.example.utils.FileUtils
+import com.example.data.models.material.MaterialFile
+import com.example.data.models.material.MaterialFolder
 import kotlinx.serialization.Serializable
-import java.io.File
-import java.util.*
 
 
 @Serializable
@@ -12,7 +10,7 @@ data class CreateFolderRequest (
     val name: String = "",
     val path: String = "",
 ){
-    fun toMaterialFolder() = com.example.data.models.MaterialFolder(
+    fun toMaterialFolder() = MaterialFolder(
         name = name,
         path = path,
     )

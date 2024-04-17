@@ -1,4 +1,4 @@
-package com.example.data.models
+package com.example.data.models.material
 
 import com.example.data.responses.MaterialFileResponse
 import com.example.data.responses.MaterialFolderResponse
