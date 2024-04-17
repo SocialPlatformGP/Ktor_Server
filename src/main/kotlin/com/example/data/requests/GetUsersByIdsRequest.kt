@@ -3,8 +3,6 @@ package com.example.data.requests
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRequest(
-    val email: String,
-    val password: String
+data class GetUsersByIdsRequest(
+    val ids: List<String> = emptyList(),
 )
-

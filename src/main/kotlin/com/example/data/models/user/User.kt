@@ -1,4 +1,4 @@
-package com.example.data.models
+package com.example.data.models.user
 
 import com.example.data.responses.UserResponse
 import kotlinx.serialization.Contextual
@@ -37,6 +37,7 @@ data class User(
         phoneNumber = phoneNumber,
         birthdate = birthdate,
         bio = bio,
-        createdAt = createdAt.toString()
+        createdAt = createdAt.toString(),
+        password = password
     )
 }
