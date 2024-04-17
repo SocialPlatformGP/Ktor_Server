@@ -1,6 +1,8 @@
 package com.example.room
 
 import com.example.data.requests.ChatRequest
+import com.example.data.requests.toMessage
+import com.example.data.requests.toResponse
 import com.example.repository.AuthRepository
 import com.example.repository.MessageDataSource
 import io.ktor.server.websocket.*
@@ -39,6 +41,7 @@ class RoomController(
         members.values.filter {
             keys.contains(it.userId)&& it.roomId == result.id
         }.forEach{
+            println("Sending message to ${it.userId} reponse: $messageResponse")
             it.socket.outgoing.send(Frame.Text(Json.encodeToString(messageResponse)))
         }
         messageDataSource.addMessageToRoom(message.toMessage())

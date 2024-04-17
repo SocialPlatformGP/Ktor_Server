@@ -6,9 +6,14 @@ import com.example.data.models.chat.Room
 import com.example.data.responses.ChatResponse
 import com.example.utils.Constants
 import com.example.utils.FileUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.io.File
+import java.net.URLConnection
+import java.util.*
+import javax.activation.MimeType
 
 sealed class ChatRequest {
 
@@ -31,31 +36,9 @@ sealed class ChatRequest {
             attachment = attachment
         )
 
-        @Contextual
-        val folder = File("files/rooms/${roomId}/${message.id}")
-        val url = if (hasAttachment && attachment.byteArray.isNotEmpty()) {
-            if (!folder.exists()) {
-                folder.mkdirs()
-            }
-            FileUtils.saveByteArrayToFile(attachment.byteArray, "files/rooms/${roomId}/" + message.id)
-            "${Constants.BASE_URL}/rooms/${roomId}/${message.id}"
-
-        } else ""
-
-        fun toResponse(senderName: String, senderPicUrl: String) = ChatResponse.MessageResponse(
-            content = content,
-            roomId = roomId,
-            createdAt = message.createdAt,
-            senderName = senderName,
-            senderPfpURL = senderPicUrl,
-            id = message.id,
-            senderId = senderId,
-            hasAttachment = hasAttachment,
-            attachment = attachment.copy(url = url, byteArray = byteArrayOf())
-        )
-
-        fun toMessage() = message.copy(attachment = attachment.copy(url = url, byteArray = byteArrayOf()))
     }
+
+
 
     @Serializable
     data class UpdateMessage(
@@ -134,3 +117,45 @@ sealed class ChatRequest {
     ) : ChatRequest()
 }
 
+fun ChatRequest.SendMessage.toMessage() : Message {
+    val url = createFileUrl()
+    return message.copy(attachment = attachment.copy(url = url, byteArray = byteArrayOf(), type = getFileExtension()))
+}
+
+private fun ChatRequest.SendMessage.createFileUrl(): String {
+    val folder = File("files/rooms/${message.roomId}/${message.id}")
+    val url = if (message.hasAttachment) {
+        if (!folder.exists()) {
+            folder.mkdirs()
+        }
+        val extension = getFileExtension()
+        FileUtils.saveByteArrayToFile(
+            message.attachment.byteArray,
+            "files/rooms/${message.roomId}/${message.id}" + "." + extension
+        )
+        "${Constants.BASE_URL}/rooms/${message.roomId}/${message.id}" + "." + extension
+
+    } else ""
+    return url
+}
+
+private fun ChatRequest.SendMessage.getFileExtension(): String {
+    val mimeType = URLConnection.guessContentTypeFromStream(message.attachment.byteArray.inputStream())
+    val extension = MimeType(mimeType).subType
+    return extension
+}
+
+fun ChatRequest.SendMessage.toResponse(senderName: String, senderPicUrl: String) {
+    val url = createFileUrl()
+    ChatResponse.MessageResponse(
+        content = content,
+        roomId = roomId,
+        createdAt = message.createdAt,
+        senderName = senderName,
+        senderPfpURL = senderPicUrl,
+        id = message.id,
+        senderId = senderId,
+        hasAttachment = hasAttachment,
+        attachment = attachment.copy(url = url, byteArray = byteArrayOf(), type = getFileExtension()),
+    )
+}
