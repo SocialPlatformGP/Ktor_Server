@@ -1,6 +1,5 @@
 package com.example.plugins
 
-import com.example.sockets.Connection
 import io.ktor.serialization.kotlinx.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*

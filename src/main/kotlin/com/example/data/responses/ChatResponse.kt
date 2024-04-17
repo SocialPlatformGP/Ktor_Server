@@ -1,7 +1,8 @@
 package com.example.data.responses
 
-import com.example.data.models.RecentRoomResponse
-import com.example.data.models.Room
+import com.example.data.models.material.MessageAttachment
+import com.example.data.models.chat.RecentRoomResponse
+import com.example.data.models.chat.Room
 import kotlinx.serialization.Serializable
 
 sealed class ChatResponse {
@@ -30,14 +31,17 @@ sealed class ChatResponse {
         val rooms: List<RecentRoomResponse>
     ) : ChatResponse()
 
-    @kotlinx.serialization.Serializable
+    @Serializable
     data class MessageResponse(
-        val content: String,
-        val createdAt: Long,
-        val roomId: String,
-        val senderName: String,
-        val senderPicUrl: String,
-        val id: String
+        val content: String = "",
+        val createdAt: Long =0L,
+        val roomId: String = "",
+        val senderId: String = "",
+        val id: String = "",
+        val senderName: String = "",
+        val senderPfpURL: String = "",
+        val hasAttachment: Boolean = false,
+        val attachment: MessageAttachment = MessageAttachment()
     ) : ChatResponse()
 
     @Serializable
@@ -46,6 +50,15 @@ sealed class ChatResponse {
     ) : ChatResponse()
     @Serializable
     data class CreateGroupRoom(
-        val roomId: String
+        val roomId: String,
+        val roomAvatarUrl: String,
+    ) : ChatResponse()
+@Serializable
+    data class GetRoomDetails (
+        val room: Room
+    ) : ChatResponse()
+@Serializable
+    data class UpdateRoomAvatar (
+        val avatarUrl: String
     ) : ChatResponse()
 }

@@ -1,5 +1,6 @@
-package com.example.data.models
+package com.example.data.models.chat
 
+import com.example.data.models.post.now
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -13,14 +14,14 @@ data class Room(
     var picUrl: String,
     val members: Map<String,Boolean>, //userId to isAdmin
     val isPrivate: Boolean,
-    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
+    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds(),
     val bio: String, //group chat description
 ){
     fun newRecentRoom() = RecentRoom(
         roomId = id,
         title = name,
         pic_url = picUrl,
-        lastMessage = "",
+        lastMessage = if(isPrivate) "###new###" else "",
         lastMessageTime = createdAt,
         isPrivate = isPrivate,
         sender_id = "",

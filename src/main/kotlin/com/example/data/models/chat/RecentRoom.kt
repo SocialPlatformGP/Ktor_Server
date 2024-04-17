@@ -1,7 +1,5 @@
-package com.example.data.models
+package com.example.data.models.chat
 
-import javax.sound.midi.Receiver
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 @kotlinx.serialization.Serializable
 data class RecentRoom(
     val roomId: String,
