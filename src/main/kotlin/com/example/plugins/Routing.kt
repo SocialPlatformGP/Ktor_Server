@@ -13,7 +13,7 @@ import com.example.security.token.TokenConfig
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
-fun Application.configureRouting2(
+fun Application.configureRouting(
     hashingService: HashingService,
     authRepository: AuthRepository,
     postRepository: PostRepository,

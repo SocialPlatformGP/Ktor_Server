@@ -10,7 +10,7 @@ import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
-val appModule2 = module {
+val appModule = module {
     single<AuthRepository>{ AuthRepositoryImpl(get()) }
     single<MaterialRepository>{ MaterialRepositoryImpl(get()) }
     single<PostRepository>{ PostRepositoryImpl(get()) }

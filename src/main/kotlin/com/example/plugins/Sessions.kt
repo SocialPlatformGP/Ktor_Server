@@ -5,7 +5,7 @@ import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugi
 import io.ktor.server.sessions.*
 import io.ktor.util.*
 
-fun Application.configureSession2() {
+fun Application.configureSession() {
     install(Sessions) {
         cookie<ChatSession>("SESSION")
     }

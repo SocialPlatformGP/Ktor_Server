@@ -28,15 +28,43 @@ sealed class ChatRequest {
         val hasAttachment: Boolean = false,
         val attachment: MessageAttachment = MessageAttachment()
     ) : ChatRequest() {
-        val message = Message(
-            content = content,
-            roomId = roomId,
-            senderId = senderId,
-            hasAttachment = hasAttachment,
-            attachment = attachment
-        )
+        fun toMessage() : Message {
+            return Message(
+                content = content,
+                roomId = roomId,
+                senderId = senderId,
+                hasAttachment = hasAttachment,
+                attachment = attachment.copy(
+                    url = if(hasAttachment) createFileUrl(
+                        roomId,
+                        hasAttachment,
+                        attachment
+                    ) else "",
+                    byteArray = byteArrayOf(),
+                    type = if(hasAttachment) getFileExtension(attachment.byteArray) else ""
+                )
+            )
+        }
+        fun toResponse(senderName: String, senderPicUrl: String) =
+            ChatResponse.MessageResponse(
+                content = content,
+                roomId = roomId,
+                senderName = senderName,
+                createdAt = toMessage().createdAt,
+                senderPfpURL = senderPicUrl,
+                senderId = senderId,
+                hasAttachment = hasAttachment,
+                attachment = attachment.copy(
+                    url = if(hasAttachment) createFileUrl(
+                        roomId,
+                        hasAttachment,
+                        attachment
+                    ) else "",
+                    byteArray = byteArrayOf(),
+                    type = if(hasAttachment) getFileExtension(attachment.byteArray) else ""
+                )            )
+        }
 
-    }
 
 
 
@@ -117,45 +145,34 @@ sealed class ChatRequest {
     ) : ChatRequest()
 }
 
-fun ChatRequest.SendMessage.toMessage() : Message {
-    val url = createFileUrl()
-    return message.copy(attachment = attachment.copy(url = url, byteArray = byteArrayOf(), type = getFileExtension()))
-}
 
-private fun ChatRequest.SendMessage.createFileUrl(): String {
-    val folder = File("files/rooms/${message.roomId}/${message.id}")
-    val url = if (message.hasAttachment) {
+fun createFileUrl(
+    roomId: String,
+    hasAttachment: Boolean,
+    attachment: MessageAttachment
+): String {
+    val m = UUID.randomUUID().toString()
+    val folder = File("files/rooms/${roomId}/${m}")
+    val url = if (hasAttachment) {
         if (!folder.exists()) {
             folder.mkdirs()
         }
-        val extension = getFileExtension()
+        val extension = getFileExtension(attachment.byteArray)
         FileUtils.saveByteArrayToFile(
-            message.attachment.byteArray,
-            "files/rooms/${message.roomId}/${message.id}" + "." + extension
+            attachment.byteArray,
+            "files/rooms/${roomId}/${m}" + "." + extension
         )
-        "${Constants.BASE_URL}/rooms/${message.roomId}/${message.id}" + "." + extension
+        "${Constants.BASE_URL}/rooms/${roomId}/${m}" + "." + extension
 
     } else ""
     return url
 }
 
-private fun ChatRequest.SendMessage.getFileExtension(): String {
-    val mimeType = URLConnection.guessContentTypeFromStream(message.attachment.byteArray.inputStream())
+fun getFileExtension(
+     data : ByteArray
+): String {
+    val mimeType = URLConnection.guessContentTypeFromStream(data.inputStream())
     val extension = MimeType(mimeType).subType
     return extension
 }
 
-fun ChatRequest.SendMessage.toResponse(senderName: String, senderPicUrl: String) {
-    val url = createFileUrl()
-    ChatResponse.MessageResponse(
-        content = content,
-        roomId = roomId,
-        createdAt = message.createdAt,
-        senderName = senderName,
-        senderPfpURL = senderPicUrl,
-        id = message.id,
-        senderId = senderId,
-        hasAttachment = hasAttachment,
-        attachment = attachment.copy(url = url, byteArray = byteArrayOf(), type = getFileExtension()),
-    )
-}

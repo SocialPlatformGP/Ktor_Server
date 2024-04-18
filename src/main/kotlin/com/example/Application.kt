@@ -24,20 +24,20 @@ fun Application.module() {
     val roomController: RoomController by inject()
     val messageDataSource: MessageDataSource by inject()
     val tokenConfig = TokenConfig(
-        issuer = "http://0.0.0.0:8080/",
-        audience = "http://0.0.0.0:8080/hello",
+        issuer = "http://0.0.0.0:8085/",
+        audience = "http://0.0.0.0:8085/hello",
         expiresIn = 365L * 1000L * 60L * 60L * 24L,
         secret = "secret"
     )
 
 //    configureHTTP()
-    configureDependencyInjection2()
-    configureSecurity2(tokenConfig)
-    configureMonitoring()
-    configureSerialization()
-    configureSession2()
-    configureSockets2()
-    configureRouting2(
+    configureDependencyInjection()
+    configureSecurity(tokenConfig)
+    configureMonitoring2()
+    configureSerialization2()
+    configureSession()
+    configureSockets()
+    configureRouting(
         hashingService = hashingService,
         authRepository = authRepository,
         postRepository = postRepository,
