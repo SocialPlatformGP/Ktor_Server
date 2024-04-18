@@ -6,14 +6,10 @@ import com.example.data.models.chat.Room
 import com.example.data.responses.ChatResponse
 import com.example.utils.Constants
 import com.example.utils.FileUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.io.File
 import java.net.URLConnection
 import java.util.*
-import javax.activation.MimeType
 
 sealed class ChatRequest {
 
@@ -41,7 +37,7 @@ sealed class ChatRequest {
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getFileExtension(attachment.name).mimeType else ""
+                    type = if(hasAttachment) getMimeTypeFromFileName(attachment.name) else ""
                 )
             )
         }
@@ -61,7 +57,7 @@ sealed class ChatRequest {
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getFileExtension(attachment.name).mimeType else ""
+                    type = if(hasAttachment) getMimeTypeFromFileName(attachment.name) else ""
                 )            )
         }
 
@@ -157,12 +153,11 @@ fun createFileUrl(
         if (!folder.exists()) {
             folder.mkdirs()
         }
-        val extension = getFileExtension(attachment.name).subType
         FileUtils.saveByteArrayToFile(
             attachment.byteArray,
-            "files/rooms/${roomId}/${m}" + "." + extension
+            "files/rooms/${roomId}/${m}" + "-" + attachment.name
         )
-        "${Constants.BASE_URL}/rooms/${roomId}/${m}" + "." + extension
+        "${Constants.BASE_URL}/rooms/${roomId}/${m}" + "-" + attachment.name
 
     } else ""
     return url
@@ -170,17 +165,68 @@ fun createFileUrl(
 
 fun getFileExtension(
      name: String
-): FileType {
-    val mimeType= URLConnection.guessContentTypeFromName(name);
+): String {
+    val mimeType: String = URLConnection.guessContentTypeFromName(name)?:"*/*"
     println("\n\n\n\n\n MimeType: $mimeType\n\n\n\n\n\n")
-    val extension = MimeType(mimeType).subType
-    return FileType(
-        subType = extension,
-        mimeType = mimeType
-    )
+    return mimeType
 }
-
-data class FileType(
-    val subType: String,
-    val mimeType: String
-)
+fun getMimeTypeFromFileName(fileName: String): String {
+    val extension = fileName.substringAfterLast('.', "")
+    return when (extension.lowercase()) {
+        "pdf" -> "application/pdf"
+        "txt" -> "text/plain"
+        "jpg", "jpeg" -> "image/jpeg"
+        "png" -> "image/png"
+        "gif" -> "image/gif"
+        "bmp" -> "image/bmp"
+        "mp3" -> "audio/mpeg"
+        "wav" -> "audio/wav"
+        "ogg" -> "audio/ogg"
+        "mp4" -> "video/mp4"
+        "avi" -> "video/x-msvideo"
+        "mov" -> "video/quicktime"
+        "wmv" -> "video/x-ms-wmv"
+        "html", "htm" -> "text/html"
+        "css" -> "text/css"
+        "js" -> "application/javascript"
+        "json" -> "application/json"
+        "xml" -> "application/xml"
+        "zip" -> "application/zip"
+        "rar" -> "application/x-rar-compressed"
+        "tar" -> "application/x-tar"
+        "7z" -> "application/x-7z-compressed"
+        "doc", "docx" -> "application/msword"
+        "xls", "xlsx" -> "application/vnd.ms-excel"
+        "ppt", "pptx" -> "application/vnd.ms-powerpoint"
+        "csv" -> "text/csv"
+        "rtf" -> "application/rtf"
+        "flac" -> "audio/flac"
+        "xlsb" -> "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+        "xlsm" -> "application/vnd.ms-excel.sheet.macroEnabled.12"
+        "xltm" -> "application/vnd.ms-excel.template.macroEnabled.12"
+        "xltx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+        "xlw" -> "application/vnd.ms-excel"
+        "potx" -> "application/vnd.openxmlformats-officedocument.presentationml.template"
+        "ppam" -> "application/vnd.ms-powerpoint.addin.macroEnabled.12"
+        "pptm" -> "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
+        "sldm" -> "application/vnd.ms-powerpoint.slide.macroEnabled.12"
+        "ppsm" -> "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+        "potm" -> "application/vnd.ms-powerpoint.template.macroEnabled.12"
+        "thmx" -> "application/vnd.ms-officetheme"
+        "ai" -> "application/postscript"
+        "eps" -> "application/postscript"
+        "psd" -> "image/vnd.adobe.photoshop"
+        "tif", "tiff" -> "image/tiff"
+        "svg" -> "image/svg+xml"
+        "mpg", "mpeg" -> "video/mpeg"
+        "woff" -> "font/woff"
+        "woff2" -> "font/woff2"
+        "ttf" -> "font/ttf"
+        "otf" -> "font/otf"
+        "webm" -> "video/webm"
+        "apk" -> "application/vnd.android.package-archive"
+        "exe" -> "application/octet-stream"
+        // Add more cases for other file types if needed
+        else -> "application/octet-stream" // Default MIME type for unknown file types
+    }
+}

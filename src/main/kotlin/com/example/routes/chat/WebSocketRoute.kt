@@ -26,9 +26,7 @@ fun Route.webSocketRoute(
         println("Session: ${session.userId} ${session.sessionId} ")
         try {
             roomController.onJoin(
-                userId = session.userId,
-                sessionId = session.sessionId,
-                socket = this
+                userId = session.userId, sessionId = session.sessionId, socket = this
             )
             incoming.consumeEach {
                 if (it is Frame.Text) {
