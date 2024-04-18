@@ -41,7 +41,7 @@ sealed class ChatRequest {
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getFileExtension(attachment.byteArray) else ""
+                    type = if(hasAttachment) getFileExtension(attachment.name).mimeType else ""
                 )
             )
         }
@@ -61,7 +61,7 @@ sealed class ChatRequest {
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getFileExtension(attachment.byteArray) else ""
+                    type = if(hasAttachment) getFileExtension(attachment.name).mimeType else ""
                 )            )
         }
 
@@ -157,7 +157,7 @@ fun createFileUrl(
         if (!folder.exists()) {
             folder.mkdirs()
         }
-        val extension = getFileExtension(attachment.byteArray)
+        val extension = getFileExtension(attachment.name).subType
         FileUtils.saveByteArrayToFile(
             attachment.byteArray,
             "files/rooms/${roomId}/${m}" + "." + extension
@@ -169,10 +169,18 @@ fun createFileUrl(
 }
 
 fun getFileExtension(
-     data : ByteArray
-): String {
-    val mimeType = URLConnection.guessContentTypeFromStream(data.inputStream())
+     name: String
+): FileType {
+    val mimeType= URLConnection.guessContentTypeFromName(name);
+    println("\n\n\n\n\n MimeType: $mimeType\n\n\n\n\n\n")
     val extension = MimeType(mimeType).subType
-    return extension
+    return FileType(
+        subType = extension,
+        mimeType = mimeType
+    )
 }
 
+data class FileType(
+    val subType: String,
+    val mimeType: String
+)

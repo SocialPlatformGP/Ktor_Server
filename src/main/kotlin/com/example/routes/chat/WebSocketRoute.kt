@@ -23,19 +23,18 @@ fun Route.webSocketRoute(
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "No session"))
             return@webSocket
         }
-        println("Session: ${session.userId} ${session.sessionId} ${session.roomId}")
+        println("Session: ${session.userId} ${session.sessionId} ")
         try {
             roomController.onJoin(
                 userId = session.userId,
                 sessionId = session.sessionId,
-                roomId = session.roomId,
                 socket = this
             )
             incoming.consumeEach {
                 if (it is Frame.Text) {
                     val receivedText = Json.decodeFromString<ChatRequest.SendMessage>(it.readText())
                     roomController.sendMessage(receivedText)
-                    println("\n\n\n\n Message: $receivedText \n\n\n\n")
+                    println("\n\n\n\n Message: ${receivedText.content} \n\n\n\n")
                 }
             }
 

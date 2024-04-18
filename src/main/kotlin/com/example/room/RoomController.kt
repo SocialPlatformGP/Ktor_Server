@@ -1,7 +1,6 @@
 package com.example.room
 
 import com.example.data.requests.ChatRequest
-
 import com.example.repository.AuthRepository
 import com.example.repository.MessageDataSource
 import io.ktor.server.websocket.*
@@ -19,12 +18,11 @@ class RoomController(
     fun onJoin(
         userId: String,
         sessionId: String,
-        roomId :String,
         socket: DefaultWebSocketServerSession
     ) {
         if (members.containsKey(userId))
             throw MemberAlreadyExistsException()
-        members[userId] = Member(userId, sessionId,roomId, socket)
+        members[userId] = Member(userId, sessionId, socket)
     }
 
     suspend fun sendMessage(
@@ -38,7 +36,7 @@ class RoomController(
         val result = messageDataSource.getRoom(message.roomId)
         val keys = result.members.keys
         members.values.filter {
-            keys.contains(it.userId)&& it.roomId == result.id
+            keys.contains(it.userId)
         }.forEach{
             println("Sending message to ${it.userId} reponse: $messageResponse")
             it.socket.outgoing.send(Frame.Text(Json.encodeToString(messageResponse)))

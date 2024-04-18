@@ -12,12 +12,10 @@ fun Application.configureSession() {
     intercept(Plugins) {
         if (call.sessions.get<ChatSession>() == null) {
             val userId = call.parameters["userid"] ?: "unknown_user"
-            val roomId = call.parameters["roomid"] ?: "unknown_room"
             call.sessions.set(
                 ChatSession(
                     userId,
                     generateNonce(),
-                    roomId
                 )
             )
             println("Session created for $userId")
@@ -28,5 +26,4 @@ fun Application.configureSession() {
 data class ChatSession(
     val userId: String,
     val sessionId: String,
-    val roomId: String
 )
