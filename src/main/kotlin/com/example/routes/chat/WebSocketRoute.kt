@@ -39,7 +39,28 @@ fun Route.webSocketRoute(
 
         } catch (e: MemberAlreadyExistsException) {
             println("\n\n\n Error: $e\n\n\n\n")
-            call.respond(HttpStatusCode.Conflict)
+        } catch (e: Exception) {
+            println("Error: $e")
+        } finally {
+            roomController.removeMember(session.userId)
+        }
+
+    }
+    webSocket("/recentSocket") {
+        val session = call.sessions.get<ChatSession>()
+        if (session == null) {
+            close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "No session"))
+            return@webSocket
+        }
+        println("Session: ${session.userId} ${session.sessionId} ")
+        try {
+            roomController.onJoinRecent(
+                userId = session.userId,
+                sessionId = session.sessionId,
+                socket = this
+            )
+        } catch (e: MemberAlreadyExistsException) {
+            println("\n\n\n Error: $e\n\n\n\n")
         } catch (e: Exception) {
             println("Error: $e")
         } finally {
