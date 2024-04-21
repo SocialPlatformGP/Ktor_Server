@@ -5,18 +5,25 @@ import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugi
 import io.ktor.server.sessions.*
 import io.ktor.util.*
 
-fun Application.configureSession2() {
+fun Application.configureSession() {
     install(Sessions) {
         cookie<ChatSession>("SESSION")
     }
     intercept(Plugins) {
         if (call.sessions.get<ChatSession>() == null) {
-            val username = call.parameters["username"]?: "unknown"
-            call.sessions.set(ChatSession(username, generateNonce()))
+            val userId = call.parameters["userid"] ?: "unknown_user"
+            call.sessions.set(
+                ChatSession(
+                    userId,
+                    generateNonce(),
+                )
+            )
+            println("Session created for $userId")
         }
     }
 }
+
 data class ChatSession(
-    val userName: String,
-    val sessionId :String
-    )
+    val userId: String,
+    val sessionId: String,
+)

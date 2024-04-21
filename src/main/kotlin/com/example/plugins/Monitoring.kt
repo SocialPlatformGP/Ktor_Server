@@ -5,7 +5,7 @@ import org.slf4j.event.*
 import io.ktor.server.request.*
 import io.ktor.server.application.*
 
-fun Application.configureMonitoring() {
+fun Application.configureMonitoring2() {
     install(CallLogging) {
         level = Level.INFO
         println(message = this.logger)

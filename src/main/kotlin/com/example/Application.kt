@@ -1,10 +1,7 @@
 package com.example
 
 import com.example.plugins.*
-import com.example.repository.AuthRepository
-import com.example.repository.MaterialRepository
-import com.example.repository.PostRepository
-import com.example.repository.ReplyRepository
+import com.example.repository.*
 import com.example.room.RoomController
 import com.example.security.TokenService
 import com.example.security.hashing.HashingService
@@ -25,22 +22,22 @@ fun Application.module() {
     val materialRepository: MaterialRepository by inject()
     val tokenService: TokenService by inject()
     val roomController: RoomController by inject()
+    val messageDataSource: MessageDataSource by inject()
     val tokenConfig = TokenConfig(
-        issuer = "http://0.0.0.0:8080/",
-        audience = "http://0.0.0.0:8080/hello",
+        issuer = "http://0.0.0.0:8085/",
+        audience = "http://0.0.0.0:8085/hello",
         expiresIn = 365L * 1000L * 60L * 60L * 24L,
         secret = "secret"
     )
 
 //    configureHTTP()
-    configureDependencyInjection2()
-    configureSecurity2(tokenConfig)
-    configureMonitoring()
-    configureSerialization()
-    configureSession2()
-    configureSockets2()
-
-    configureRouting2(
+    configureDependencyInjection()
+    configureSecurity(tokenConfig)
+    configureMonitoring2()
+    configureSerialization2()
+    configureSession()
+    configureSockets()
+    configureRouting(
         hashingService = hashingService,
         authRepository = authRepository,
         postRepository = postRepository,
@@ -48,7 +45,8 @@ fun Application.module() {
         tokenConfig = tokenConfig,
         roomController = roomController,
         materialRepository = materialRepository,
-        replyRepository = replyRepository
+        replyRepository = replyRepository,
+        messageDataSource = messageDataSource
     )
 
 }

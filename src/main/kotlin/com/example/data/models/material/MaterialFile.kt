@@ -1,4 +1,4 @@
-package com.example.data.models
+package com.example.data.models.material
 
 import com.example.data.responses.MaterialFileResponse
 import com.example.data.responses.MaterialFolderResponse
@@ -17,14 +17,16 @@ data class MaterialFile(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @BsonId
     val id : String = ObjectId().toString(),
-){
+    val localPath: String = "",
+    ){
     fun toResponse() = MaterialFileResponse(
         name = name,
         type = type,
         url = url,
         createdAt = createdAt,
         id = id,
-        path = path
+        path = path,
+        localPath = localPath
     )
 }
 @Serializable

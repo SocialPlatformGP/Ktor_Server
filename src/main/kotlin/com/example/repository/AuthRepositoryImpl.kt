@@ -1,15 +1,11 @@
 package com.example.repository
 
-import com.example.data.models.User
-import com.mongodb.client.gridfs.GridFSBuckets
-import com.mongodb.client.gridfs.model.GridFSFile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.litote.kmongo.KMongo
+import com.example.data.models.user.User
+import com.example.data.responses.UserResponse
 
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
-import java.io.File
+import org.litote.kmongo.`in`
 import java.io.InputStream
 
 class AuthRepositoryImpl(db: CoroutineDatabase) : AuthRepository {
@@ -24,6 +20,15 @@ class AuthRepositoryImpl(db: CoroutineDatabase) : AuthRepository {
 
     override suspend fun findUserById(id: String): User? =
         users.findOne(User::id eq id)
+
+    override suspend fun getAllUsers(): List<User> {
+        val result = users.find().toList()
+        println("Result: $result")
+        return result
+    }
+
+    override suspend fun getUsersByIds(ids: List<String>): List<UserResponse> =
+        users.find(User::id `in` ids).toList().map { it.toResponse() }
 
 }
 data class File(val name:String,val stream:InputStream)

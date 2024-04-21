@@ -1,8 +1,8 @@
 package com.example.data.responses
 
-import com.example.data.models.*
-import kotlinx.serialization.Contextual
-import java.time.LocalDateTime
+import com.example.data.models.post.Post
+import com.example.data.models.post.PostFile
+import com.example.data.models.post.Tag
 
 @kotlinx.serialization.Serializable
 data class PostResponse(
@@ -11,7 +11,7 @@ data class PostResponse(
     val authorPfp: String = "",
     val id: String = "",
     val authorID: String = "",
-    val createdAt: Long=0L ,
+    val createdAt: Long=0L,
     val title: String = "",
     val body: String = "",
     val votes: Int = 0,

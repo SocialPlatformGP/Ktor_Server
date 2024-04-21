@@ -1,5 +1,6 @@
-package com.example.data.models
+package com.example.data.models.post
 
+import com.example.data.models.user.User
 import com.example.data.responses.PostResponse
 import kotlinx.datetime.*
 
@@ -54,23 +55,9 @@ data class Post(
     )
 }
 
-@kotlinx.serialization.Serializable
-data class Tag(
-    @BsonId
-    val id: String = ObjectId().toString(),
-    val label: String = "",
-    val intColor: Int = 0,
-    val hexColor: String = "#000000",
-)
 
-@kotlinx.serialization.Serializable
-data class PostFile(
-    val file: ByteArray = byteArrayOf(),
-    val url: String = "",
-    val name: String = "",
-    val type: String = "",
-    val size: Long = 0
-)
+
+
 
 
 

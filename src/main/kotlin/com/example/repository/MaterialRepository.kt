@@ -1,7 +1,7 @@
 package com.example.repository
 
-import com.example.data.models.MaterialFile
-import com.example.data.models.MaterialFolder
+import com.example.data.models.material.MaterialFile
+import com.example.data.models.material.MaterialFolder
 import com.example.data.responses.MaterialResponse
 
 interface MaterialRepository {
@@ -15,4 +15,6 @@ interface MaterialRepository {
     suspend fun getMaterialResponse(
         path: String
     ):MaterialResponse
+
+    suspend fun deleteFile(id: String, path: String): MaterialResponse
 }

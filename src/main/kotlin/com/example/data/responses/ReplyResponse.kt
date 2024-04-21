@@ -1,11 +1,6 @@
 package com.example.data.responses
 
-import com.example.data.models.Reply
-import com.example.data.models.now
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import org.bson.types.ObjectId
+import com.example.data.models.reply.Reply
 
 data class ReplyResponse(
     val id: String = "",

@@ -1,9 +1,8 @@
 package com.example.repository
 
-import com.example.data.models.Reply
+import com.example.data.models.reply.Reply
 import com.example.data.requests.ReplyRequest
 import com.example.data.responses.ReplyResponse
-import kotlinx.coroutines.flow.Flow
 
 interface ReplyRepository {
     suspend fun createReply(response: ReplyResponse): Boolean
