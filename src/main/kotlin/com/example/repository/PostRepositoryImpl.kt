@@ -19,7 +19,7 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
     private val userCollection = db.getCollection<User>()
     private val tagCollection = db.getCollection<Tag>()
     override suspend fun createPost(postRequest: PostResponse): Boolean {
-
+        println("*************************************\ncreate post called: $postRequest\n**********************")
         return postCollection.insertOne(postRequest.toEntity()).wasAcknowledged()
 
     }
@@ -54,63 +54,56 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
         if (postRequest.userId.isBlank()) {
             return PostResponse()
         }
-        val post = postCollection.findOne(Post::id eq postRequest.postId)
+        val post = postCollection.findOne(Post::id eq postRequest.postId)?: return PostResponse()
         println(post)
-        if (post != null) {
-            val userAlreadyVoted = post.upvoted.contains(postRequest.userId)
-            println(userAlreadyVoted)
-            if (userAlreadyVoted) {
+        val userAlreadyVoted = post.upvoted.contains(postRequest.userId)
+        println(userAlreadyVoted)
+        if (userAlreadyVoted) {
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                pull(Post::upvoted, postRequest.userId)
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(
+                    Post::votes, post.votes - 1
+                )
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
+            )
+            return post.toResponse()
+        } else {
+
+            if (post.downvoted.contains(postRequest.userId)) {
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
-                    pull(Post::upvoted, postRequest.userId)
+                    pull(Post::downvoted, postRequest.userId)
                 )
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
                     setValue(
-                        Post::votes, post.votes - 1
+                        Post::votes, post.votes + 2
                     )
                 )
+            }else {
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
-                    setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
-                )
-                return post.toResponse()
-            } else {
-
-                if (post.downvoted.contains(postRequest.userId)) {
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        pull(Post::downvoted, postRequest.userId)
+                    setValue(
+                        Post::votes, post.votes + 1
                     )
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        setValue(
-                            Post::votes, post.votes + 2
-                        )
-                    )
-                }else {
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        setValue(
-                            Post::votes, post.votes + 1
-                        )
-                    )
-                }
-                postCollection.updateOne(
-                    Post::id eq postRequest.postId,
-                    addToSet(Post::upvoted, postRequest.userId)
                 )
-                postCollection.updateOne(
-                    Post::id eq postRequest.postId,
-                    setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
-                )
-
-                // TODO if user already downvoted, remove from downvoted list
-
-                return post.toResponse()
             }
-        } else {
-            return PostResponse()
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                addToSet(Post::upvoted, postRequest.userId)
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
+            )
+            return post.toResponse()
         }
     }
 
@@ -119,63 +112,56 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
         if (postRequest.userId.isBlank()) {
             return PostResponse()
         }
-        val post = postCollection.findOne(Post::id eq postRequest.postId)
+        val post = postCollection.findOne(Post::id eq postRequest.postId)?: return PostResponse()
         println(post)
-        if (post != null) {
-            val userAlreadyVoted = post.downvoted.contains(postRequest.userId)
-            println(userAlreadyVoted)
-            if (userAlreadyVoted) {
+        val userAlreadyVoted = post.downvoted.contains(postRequest.userId)
+        println(userAlreadyVoted)
+        if (userAlreadyVoted) {
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                pull(Post::downvoted, postRequest.userId)
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(
+                    Post::votes, post.votes + 1
+                )
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
+            )
+            return post.toResponse()
+        } else {
+            if (post.upvoted.contains(postRequest.userId)) {
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
-                    pull(Post::downvoted, postRequest.userId)
+                    pull(Post::upvoted, postRequest.userId)
                 )
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
                     setValue(
-                        Post::votes, post.votes + 1
+                        Post::votes, post.votes - 2
                     )
                 )
-                postCollection.updateOne(
-                    Post::id eq postRequest.postId,
-                    setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
-                )
-                return post.toResponse()
-            } else {
-                if (post.upvoted.contains(postRequest.userId)) {
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        pull(Post::upvoted, postRequest.userId)
-                    )
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        setValue(
-                            Post::votes, post.votes - 2
-                        )
-                    )
-                }
-                else {
-                    postCollection.updateOne(
-                        Post::id eq postRequest.postId,
-                        setValue(
-                            Post::votes, post.votes - 1
-                        )
-                    )
-                }
-                postCollection.updateOne(
-                    Post::id eq postRequest.postId,
-                    addToSet(Post::downvoted, postRequest.userId)
-                )
-                postCollection.updateOne(
-                    Post::id eq postRequest.postId,
-                    setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
-                )
-
-                // TODO if user already downvoted, remove from downvoted list
-
-                return post.toResponse()
             }
-        } else {
-            return PostResponse()
+            else {
+                postCollection.updateOne(
+                    Post::id eq postRequest.postId,
+                    setValue(
+                        Post::votes, post.votes - 1
+                    )
+                )
+            }
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                addToSet(Post::downvoted, postRequest.userId)
+            )
+            postCollection.updateOne(
+                Post::id eq postRequest.postId,
+                setValue(Post::lastModified, LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
+            )
+            return post.toResponse()
         }
     }
 

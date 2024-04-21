@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.data.requests.AddTagRequest
+import com.example.data.requests.PostRequest
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 import com.example.repository.PostRepository
@@ -23,19 +24,21 @@ fun Route.createPost2(
         call.respondText ("Hello World")
     }
     post("createPost") {
-        val request = call.receiveNullable<PostResponse>() ?: kotlin.run {
+        val request = call.receiveNullable<PostRequest.CreateRequest>()?.post ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
             return@post
         }
         val fieldsBlank = request.title.isBlank() || request.body.isBlank()
-
+        println("request: $request")
         if (fieldsBlank) {
+            println("fieldsBlank")
             call.respond(HttpStatusCode.Conflict, message = "Fields required")
             return@post
         }
 
         if (request.attachments.isEmpty()) {
-            val wasAcknowledged = postRepository.createPost(postRequest = request)
+            val wasAcknowledged = postRepository.createPost(postRequest = request.toResponse())
+            println("empty attachments: $wasAcknowledged")
             if (!wasAcknowledged) {
                 call.respond(HttpStatusCode.Conflict, message = "Error Creating the post")
                 return@post
@@ -58,7 +61,7 @@ fun Route.createPost2(
                     name = it.name
                 )
             }
-            val wasAcknowledged = postRepository.createPost(postRequest = request.copy(attachments = attachments))
+            val wasAcknowledged = postRepository.createPost(postRequest = request.toResponse().copy(attachments = attachments))
             if (!wasAcknowledged) {
                 call.respond(HttpStatusCode.Conflict, message = "Error Creating the post")
                 return@post
