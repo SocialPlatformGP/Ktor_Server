@@ -51,6 +51,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-freemarker-jvm")
+    implementation("io.ktor:ktor-server-partial-content:$ktor_version")
+    implementation("io.ktor:ktor-server-auto-head-response:$ktor_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
@@ -82,6 +84,9 @@ dependencies {
     //
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.8")
+    implementation("com.google.firebase:firebase-admin:9.0.0")
+
+
 
 
 }

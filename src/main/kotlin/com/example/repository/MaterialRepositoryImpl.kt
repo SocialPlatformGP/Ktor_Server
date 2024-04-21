@@ -14,17 +14,18 @@ class MaterialRepositoryImpl(
     private val materialFiles = db.getCollection<MaterialFile>()
     override suspend fun createMaterialFolder(
         materialFolder: MaterialFolder
-    ): MaterialResponse {
+    ): MaterialResponse.GetMaterialResponses {
        val success =  materialFolders.insertOne(materialFolder).wasAcknowledged()
         return if(success){
             val files = materialFiles.find(MaterialFile::path eq materialFolder.path).toList()
             val folders = materialFolders.find(MaterialFolder::path eq materialFolder.path).toList()
-            MaterialResponse(
+
+            MaterialResponse.GetMaterialResponses(
                 files.map { it.toResponse() },
                 folders.map { it.toResponse() }
             )
         }else{
-            MaterialResponse()
+            MaterialResponse.GetMaterialResponses()
         }
     }
 
@@ -33,12 +34,12 @@ class MaterialRepositoryImpl(
         return if(success){
             val files = materialFiles.find(MaterialFile::path eq materialFile.path).toList()
             val folders = materialFolders.find(MaterialFolder::path eq materialFile.path).toList()
-            MaterialResponse(
+            MaterialResponse.GetMaterialResponses(
                 files.map { it.toResponse() },
                 folders.map { it.toResponse() }
             )
         }else{
-            MaterialResponse()
+            MaterialResponse.GetMaterialResponses()
         }
     }
 
@@ -47,7 +48,18 @@ class MaterialRepositoryImpl(
         val materialFile = materialFiles.find(MaterialFile::path eq path).toList()
         val materialFolder = materialFolders.find(MaterialFolder::path eq path).toList()
 
-        return MaterialResponse(
+        return MaterialResponse.GetMaterialResponses(
+            materialFile.map { it.toResponse() },
+            materialFolder.map { it.toResponse() }
+        )
+    }
+
+    override suspend fun deleteFile(id: String, path: String): MaterialResponse {
+        materialFiles.deleteOne(MaterialFile::id eq id).wasAcknowledged()
+        val materialFile = materialFiles.find(MaterialFile::path eq path).toList()
+        val materialFolder = materialFolders.find(MaterialFolder::path eq path).toList()
+
+        return MaterialResponse.GetMaterialResponses(
             materialFile.map { it.toResponse() },
             materialFolder.map { it.toResponse() }
         )

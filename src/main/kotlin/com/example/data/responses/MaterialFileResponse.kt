@@ -4,9 +4,12 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MaterialFolderResponse(
+data class MaterialFileResponse(
     val name: String="",
+    val type: String="",
+    val url: String="",
     val createdAt: LocalDateTime? = null,
-    val id : String = "",
-    val path: String = ""
+    val id : String ="",
+    val path : String = "",
+    val localPath: String = ""
 )

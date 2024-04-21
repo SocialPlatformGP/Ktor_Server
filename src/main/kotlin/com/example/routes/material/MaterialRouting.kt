@@ -16,4 +16,8 @@ fun Route.materialRouting(
     uploadFolder(
         materialRepository = materialRepository
     )
+    deleteFile(
+        materialRepository = materialRepository
+    )
+    downloadFile()
 }

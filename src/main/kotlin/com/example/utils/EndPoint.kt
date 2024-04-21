@@ -59,6 +59,8 @@ sealed class EndPoint(val route: String) {
         data object UploadFolder : EndPoint("/uploadFolder")
         data object UploadFile : EndPoint("/uploadFile")
         data object GetFiles : EndPoint("/get_files")
+        data object DeleteFile : EndPoint("/deleteFile")
+        data object DownloadFile:EndPoint("/downloadFile")
     }
 
 

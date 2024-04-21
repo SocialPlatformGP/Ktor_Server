@@ -15,4 +15,6 @@ interface MaterialRepository {
     suspend fun getMaterialResponse(
         path: String
     ):MaterialResponse
+
+    suspend fun deleteFile(id: String, path: String): MaterialResponse
 }

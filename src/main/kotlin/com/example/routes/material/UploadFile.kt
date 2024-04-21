@@ -1,7 +1,7 @@
 package com.example.routes.material
 
 import com.example.data.models.material.MaterialFile
-import com.example.data.requests.CreateFileRequest
+import com.example.data.requests.MaterialRequest
 import com.example.repository.MaterialRepository
 import com.example.utils.EndPoint
 import com.example.utils.FileUtils
@@ -16,7 +16,7 @@ fun Route.uploadFile(
     materialRepository: MaterialRepository
 ) {
     post(EndPoint.Media.UploadFile.route) {
-        val request = call.receiveNullable<CreateFileRequest>() ?: kotlin.run {
+        val request = call.receiveNullable<MaterialRequest.CreateFileRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
             return@post
         }

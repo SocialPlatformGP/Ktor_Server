@@ -22,4 +22,15 @@ sealed class MaterialRequest {
         val content: ByteArray = byteArrayOf(),
         val path: String = "",
     ) : MaterialRequest()
+
+    @Serializable
+    data class DeleteFileRequest(
+        val fileId: String = "",
+        val path: String = ""
+    ) : MaterialRequest()
+
+    @Serializable
+    data class DownloadFileRequest(
+        val url: String = "",
+    ) : MaterialRequest()
 }

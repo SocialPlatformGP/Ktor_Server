@@ -1,6 +1,5 @@
 package com.example.routes.material
 
-import com.example.data.models.material.MaterialFolder
 import com.example.data.requests.MaterialRequest
 import com.example.repository.MaterialRepository
 import com.example.utils.EndPoint
@@ -10,19 +9,15 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.uploadFolder(
+fun Route.deleteFile(
     materialRepository: MaterialRepository
 ) {
-    post(EndPoint.Media.UploadFolder.route) {
-        val request = call.receiveNullable<MaterialRequest.CreateFolderRequest>() ?: kotlin.run {
+    post(EndPoint.Media.DeleteFile.route) {
+        val request = call.receiveNullable<MaterialRequest.DeleteFileRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
             return@post
         }
-        val folder = MaterialFolder(
-            name = request.name,
-            path = request.path
-        )
-        val response = materialRepository.createMaterialFolder(folder)
-        call.respond(HttpStatusCode.OK, response)
+        val response = materialRepository.deleteFile(request.fileId, request.path)
+        call.respond(response)
     }
 }
