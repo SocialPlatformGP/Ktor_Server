@@ -12,7 +12,7 @@ import io.ktor.server.routing.*
 fun Route.upvotePost(
     postRepository: PostRepository
 ) {
-    post(EndPoint.Post.UpdatePost.route) {
+    post(EndPoint.Post.UpvotePost.route) {
         val request = call.receiveNullable<UpdateOrDeletePostRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
             return@post
