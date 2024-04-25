@@ -12,7 +12,6 @@ fun Route.getAllUsers(
 ) {
     get(EndPoint.Auth.GetAllUsers.route) {
         val users = authRepository.getAllUsers()
-        println("users" + users)
-        call.respond(status = HttpStatusCode.OK, users.map { it.toResponse() })
+        call.respond(status = HttpStatusCode.OK, users)
     }
 }

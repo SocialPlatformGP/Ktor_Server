@@ -4,6 +4,7 @@ import com.example.repository.*
 import com.example.room.RoomController
 import com.example.routes.auth.*
 import com.example.routes.chat.*
+import com.example.routes.community.communityRouting
 import com.example.routes.material.*
 import com.example.routes.post.*
 import com.example.routes.reply.replyRouting
@@ -14,22 +15,21 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting(
-    hashingService: HashingService,
     authRepository: AuthRepository,
     postRepository: PostRepository,
-    tokenService: TokenService,
-    tokenConfig: TokenConfig,
     roomController: RoomController,
     materialRepository: MaterialRepository,
     replyRepository: ReplyRepository,
-    messageDataSource: MessageDataSource
+    messageDataSource: MessageDataSource,
+    communityRepository: CommunityRepository
 ) {
     routing {
-        authRouting(hashingService,authRepository,tokenService,tokenConfig)
+        authRouting(authRepository)
         chatRouting(roomController,messageDataSource)
         postRouting(postRepository)
         materialRouting(materialRepository)
         replyRouting(replyRepository)
-    }
+        communityRouting(communityRepository)
 
+    }
 }

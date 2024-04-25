@@ -11,5 +11,6 @@ data class MaterialFileResponse(
     val createdAt: LocalDateTime? = null,
     val id : String ="",
     val path : String = "",
-    val localPath: String = ""
+    val localPath: String = "",
+    val communityId: String=""
 )

@@ -16,7 +16,6 @@ fun Route.getUsersByIds(
     post(EndPoint.Auth.GetUsersByIds.route){
         val request = call.receiveNullable<GetUsersByIdsRequest>() ?: return@post call.respond(HttpStatusCode.BadRequest)
         authRepository.getUsersByIds(request.ids).let { users ->
-            println("\n\n\n\n\n users: $users")
             call.respond(HttpStatusCode.OK, users)
         }
 

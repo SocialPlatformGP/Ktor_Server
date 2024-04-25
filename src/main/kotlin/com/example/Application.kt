@@ -23,6 +23,7 @@ fun Application.module() {
     val tokenService: TokenService by inject()
     val roomController: RoomController by inject()
     val messageDataSource: MessageDataSource by inject()
+    val communityRepository: CommunityRepository by inject()
     val tokenConfig = TokenConfig(
         issuer = "http://0.0.0.0:8085/",
         audience = "http://0.0.0.0:8085/hello",
@@ -38,15 +39,14 @@ fun Application.module() {
     configureSession()
     configureSockets()
     configureRouting(
-        hashingService = hashingService,
         authRepository = authRepository,
         postRepository = postRepository,
-        tokenService = tokenService,
-        tokenConfig = tokenConfig,
         roomController = roomController,
         materialRepository = materialRepository,
         replyRepository = replyRepository,
-        messageDataSource = messageDataSource
+        messageDataSource = messageDataSource,
+        communityRepository = communityRepository
     )
+
 
 }

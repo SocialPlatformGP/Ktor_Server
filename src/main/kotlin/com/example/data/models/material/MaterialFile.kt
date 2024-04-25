@@ -10,6 +10,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class MaterialFile(
+    val communityId: String="",
     val name: String="",
     val type: String="",
     val url: String="",
@@ -26,11 +27,13 @@ data class MaterialFile(
         createdAt = createdAt,
         id = id,
         path = path,
-        localPath = localPath
+        localPath = localPath,
+        communityId = communityId
     )
 }
 @Serializable
 data class MaterialFolder(
+    val communityId: String="",
     val name: String="",
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @BsonId
@@ -41,6 +44,7 @@ data class MaterialFolder(
         name = name,
         createdAt = createdAt,
         id = id,
-        path = path
+        path = path,
+        communityId = communityId
     )
 }

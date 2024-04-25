@@ -32,6 +32,7 @@ sealed class EndPoint(val route: String) {
         data object SignUp : EndPoint("/signup")
         data object SignIn : EndPoint("/signin")
         data object GetUsersByIds: EndPoint("/getUsersByIds")
+       data object CreateUser : EndPoint("/createUser")
     }
     object Post {
         data object CreatePost : EndPoint("/createPost")

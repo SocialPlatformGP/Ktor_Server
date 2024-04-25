@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 @Serializable
 sealed interface Error
+
 @Serializable
 sealed interface DataError : Error {
     @Serializable
@@ -27,6 +28,26 @@ sealed interface DataError : Error {
         CANT_CREATE_FOLDER("Can't create folder"),
         CANT_GET_FILES_AT_PATH("Can't get files at path"),
         FILE_ALREADY_EXISTS("File already exists"),
-        FAILED_TO_SERIALIZE_THE_REQUEST("Failed to serialize the request")
+        FAILED_TO_SERIALIZE_THE_REQUEST("Failed to serialize the request"),
     }
 }
+
+@Serializable
+sealed interface DataSuccess {
+    @Serializable
+    enum class Reply(val message: String) : DataSuccess {
+        CREATED_SUCCESSFULLY(" Reply Created successfully"),
+        UPDATED_SUCCESSFULLY(" Reply Updated successfully"),
+        DELETED_SUCCESSFULLY(" Reply Deleted successfully"),
+        UPVOTED_SUCCESSFULLY(" Reply Upvoted successfully"),
+        DOWNVOTED_SUCCESSFULLY(" Reply Downvoted successfully")
+    }
+    @Serializable
+    enum class User(val message: String) : DataSuccess {
+        CREATED_SUCCESSFULLY(" User Created successfully"),
+        UPDATED_SUCCESSFULLY(" User Updated successfully"),
+        DELETED_SUCCESSFULLY(" User Deleted successfully"),
+
+    }
+}
+
