@@ -10,6 +10,8 @@ sealed interface Error
 sealed interface DataError : Error {
     @Serializable
     enum class Network(val userMessage :String) : DataError {
+        YOUR_EMAIL_DOMAIN_IS_NOT_ALLOWED("Your email domain is not allowed"),
+        INVALID_CODE("Invalid code"),
         NO_INTERNET_OR_SERVER_DOWN("No internet connection or server down"),
         BAD_REQUEST("Bad request"),
         UNAUTHORIZED("Unauthorized"),
@@ -28,7 +30,7 @@ sealed interface DataError : Error {
         CANT_CREATE_FOLDER("Can't create folder"),
         CANT_GET_FILES_AT_PATH("Can't get files at path"),
         FILE_ALREADY_EXISTS("File already exists"),
-        FAILED_TO_SERIALIZE_THE_REQUEST("Failed to serialize the request"),
+        FAILED_TO_SERIALIZE_THE_REQUEST("Failed to serialize the request"),;
     }
 }
 

@@ -16,5 +16,8 @@ fun Route.communityRouting(
     communityLogout(
         commRepo = communityRepo
     )
+    joinCommunity(
+        commRepo = communityRepo
+    )
 
 }
