@@ -6,6 +6,8 @@ import com.example.data.models.community.UserCommunities
 import com.example.data.models.user.User
 import com.example.routes.community.request.CommunityRequest
 import com.example.utils.DataError
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 import org.litote.kmongo.setTo
@@ -38,29 +40,32 @@ class CommunityRepositoryImpl(db: CoroutineDatabase) : CommunityRepository {
             true
         } else {
             user.email.let { email ->
-                comm.allowedEmailDomains.any { domain -> email.endsWith(domain) }
+                comm.allowedEmailDomains.any { domain -> email.split("@")[1] == domain }
             }
         }
-
     }
 
-    override suspend fun joinCommunity(request: CommunityRequest.JoinCommunity): List<Community> {
-        val comm = communities.findOne(CommunityEntity::code eq request.code) ?: return emptyList()
+    override suspend fun joinCommunity(request: CommunityRequest.JoinCommunity): Boolean   {
+        val comm = communities.findOne(CommunityEntity::code eq request.code)?: return false
         val userComm = userCommunities.findOne(UserCommunities::id eq request.id)
         if (userComm == null) {
             userCommunities.insertOne(UserCommunities(request.id, mutableListOf(comm.id)))
+            return true
         } else {
             userCommunities.updateOne(
                 UserCommunities::id eq request.id,
                 userComm.copy(groups = userComm.groups + comm.id)
             )
-
+            return true
         }
-        return userComm?.groups?.mapNotNull { commId ->
-            communities.findOne(CommunityEntity::id eq commId)?.toCommunity()
-        } ?: emptyList()
-
     }
+
+    override suspend fun isAlreadyMember(request: CommunityRequest.JoinCommunity): Boolean {
+        val comm = communities.findOne(CommunityEntity::code eq request.code) ?: return false
+        val userComm = userCommunities.findOne(UserCommunities::id eq request.id) ?: return false
+        return userComm.groups.contains(comm.id)
+    }
+
 
     override suspend fun createCommunity(request: CommunityRequest.CreateCommunity): Community {
         val comm = request.community.toEntity(request.creatorId)
