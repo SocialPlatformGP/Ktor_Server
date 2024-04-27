@@ -2,6 +2,7 @@ package com.example.routes.material
 
 import com.example.data.requests.MaterialRequest
 import com.example.data.responses.MaterialResponse
+import com.example.utils.DataError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,7 +19,7 @@ fun Route.downloadFile() {
         if(file.exists()) {
             call.respond(HttpStatusCode.OK,MaterialResponse.DownloadFileResponse(file.readBytes(), file.name))
         } else {
-            call.respond(HttpStatusCode.NotFound,"File not found")
+            call.respond(HttpStatusCode.NotFound,DataError.Network.FILE_NOT_FOUND)
         }
     }
 }
