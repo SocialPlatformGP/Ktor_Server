@@ -33,7 +33,8 @@ fun Route.uploadFile(
                 path = request.path,
                 url = request.path + "/" + request.name,
                 type = file.extension,
-                name = request.name
+                name = request.name,
+                communityId = request.communityId
             )
         )
         call.respond(response)

@@ -27,7 +27,7 @@ data class Post(
     val type: String = "general",
     val attachments: List<PostFile> = emptyList(),
     val lastModified: Long = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
-    val communityId: String = "",
+    val communityID: String = "",
     @BsonId
     val id: String = ObjectId().toString(),
 
@@ -50,7 +50,7 @@ data class Post(
         downvoted = downvoted,
         upvoted = upvoted,
         replyCount = replyCount,
-        communityId = communityId,
+        communityID = communityID,
         lastModified = lastModified
 
 

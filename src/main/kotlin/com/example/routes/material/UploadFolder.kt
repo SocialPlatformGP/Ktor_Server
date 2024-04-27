@@ -3,6 +3,7 @@ package com.example.routes.material
 import com.example.data.models.material.MaterialFolder
 import com.example.data.requests.MaterialRequest
 import com.example.repository.MaterialRepository
+import com.example.utils.DataError
 import com.example.utils.EndPoint
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -15,12 +16,14 @@ fun Route.uploadFolder(
 ) {
     post(EndPoint.Media.UploadFolder.route) {
         val request = call.receiveNullable<MaterialRequest.CreateFolderRequest>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
+            call.respond(HttpStatusCode.BadRequest,DataError.Network.BAD_REQUEST)
             return@post
         }
+        println(request)
         val folder = MaterialFolder(
             name = request.name,
-            path = request.path
+            path = request.path,
+            communityId = request.communityId
         )
         val response = materialRepository.createMaterialFolder(folder)
         call.respond(HttpStatusCode.OK, response)

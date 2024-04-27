@@ -22,7 +22,7 @@ data class PostResponse(
     val tags: List<Tag> = emptyList(),
     val type: String = "general",
     val attachments: List<PostFile> = emptyList(),
-    val communityId: String = "",
+    val communityID: String = "",
     val lastModified: Long = 0L
     ){
     fun toEntity() = Post(
@@ -40,6 +40,6 @@ data class PostResponse(
         tags = tags,
         type = type,
         attachments = attachments,
-        communityId = communityId,
+        communityID = communityID,
     )
 }

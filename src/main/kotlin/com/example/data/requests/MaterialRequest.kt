@@ -8,20 +8,25 @@ sealed class MaterialRequest {
     data class GetMaterialInPath(val path: String = "") : MaterialRequest()
 
     @Serializable
-    data class CreateFolderRequest(val name: String = "", val path: String = "") : MaterialRequest() {
+    data class CreateFolderRequest(
+        val name: String = "",
+        val path: String = "",
+        val communityId: String,
+    ): MaterialRequest(){
         fun toMaterialFolder() = MaterialFolder(
             name = name,
             path = path,
+            communityId = communityId
         )
     }
-
     @Serializable
     data class CreateFileRequest(
         val name: String = "",
         val type: String = "",
         val content: ByteArray = byteArrayOf(),
         val path: String = "",
-    ) : MaterialRequest()
+        val communityId: String,
+    ): MaterialRequest()
 
     @Serializable
     data class DeleteFileRequest(

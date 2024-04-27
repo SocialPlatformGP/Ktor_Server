@@ -12,10 +12,10 @@ import io.ktor.server.routing.*
 fun Route.deletePost(
     postRepository: PostRepository
 ) {
-    delete(EndPoint.Post.DeletePost.route) {
+    post(EndPoint.Post.DeletePost.route) {
         val request = call.receiveNullable<UpdateOrDeletePostRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-            return@delete
+            return@post
         }
         val wasAcknowledged = postRepository.deletePost(request)
         call.respond(HttpStatusCode.OK, wasAcknowledged)

@@ -12,10 +12,10 @@ import io.ktor.server.routing.*
 fun Route.updatePost(
     postRepository: PostRepository
 ) {
-    put(EndPoint.Post.UpdatePost.route) {
+    post(EndPoint.Post.UpdatePost.route) {
         val request = call.receiveNullable<PostResponse>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-            return@put
+            return@post
         }
         val wasAcknowledged = postRepository.updatePost(request)
         call.respond(HttpStatusCode.OK, wasAcknowledged)
