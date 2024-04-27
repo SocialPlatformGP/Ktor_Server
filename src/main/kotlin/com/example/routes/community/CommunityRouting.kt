@@ -19,5 +19,18 @@ fun Route.communityRouting(
     joinCommunity(
         commRepo = communityRepo
     )
+    acceptCommunityRequest(
+        commRepo = communityRepo
+    )
+    declineCommunityRequest(
+        commRepo = communityRepo
+    )
+    fetchCommunity(
+        commRepo = communityRepo
+    )
+    fetchCommunityMembers(
+        commRepo = communityRepo
+    )
+
 
 }
