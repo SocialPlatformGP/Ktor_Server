@@ -10,6 +10,8 @@ sealed interface Error
 sealed interface DataError : Error {
     @Serializable
     enum class Network(val userMessage :String) : DataError {
+        REQUEST_ALREADY_SENT("Request already sent"),
+        WAIT_FOR_APPROVAL_FROM_ADMIN("Wait for approval from admin"),
         ALREADY_MEMBER("Already a member"),
         YOUR_EMAIL_DOMAIN_IS_NOT_ALLOWED("Your email domain is not allowed"),
         INVALID_CODE("Invalid code"),

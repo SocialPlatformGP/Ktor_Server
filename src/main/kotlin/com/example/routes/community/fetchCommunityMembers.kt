@@ -9,18 +9,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-
-fun Route.createCommunity(
+fun Route.fetchCommunityMembers(
     commRepo: CommunityRepository
-) {
-    post("/createCommunity") {
-        val request = call.receiveNullable<CommunityRequest.CreateCommunity>() ?: return@post call.respond(
-            HttpStatusCode.BadRequest,
-            DataError.Network.BAD_REQUEST
-        )
-        val community = commRepo.createCommunity(request)
-        call.respond(HttpStatusCode.OK, community)
-
+){
+    post("fetchCommunityMembersRequests"){
+        val request = call.receiveNullable<CommunityRequest.FetchCommunityMembersRequests>()?: return@post call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+        val result = commRepo.fetchCommunityMembers(request)
+        call.respond(HttpStatusCode.OK, result)
     }
 }
-
