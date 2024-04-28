@@ -157,7 +157,7 @@ fun createFileUrl(
             attachment.byteArray,
             "files/rooms/${roomId}/${m}" + "-" + attachment.name
         )
-        "${Constants.BASE_URL}/rooms/${roomId}/${m}" + "-" + attachment.name
+        "rooms/${roomId}/${m}" + "-" + attachment.name
 
     } else ""
     return url

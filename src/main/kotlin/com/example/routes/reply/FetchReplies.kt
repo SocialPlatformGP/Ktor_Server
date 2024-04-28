@@ -13,8 +13,10 @@ fun Route.fetchReplies(
     replyRepository: ReplyRepository
 ) {
     post(EndPoint.Reply.FetchReplies.route) {
-        val request = call.receiveNullable<ReplyRequest.FetchRequest>() ?:return@post
+        val request = call.receiveNullable<ReplyRequest.FetchRequest>() ?: return@post
+        if(request == null){
             call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
+        }
         println("\n\n\n\n\n\n\n\n\n\nrequesT: $request\n\n\n\n\n\n\n\n\n\n\n\n")
         val result = replyRepository.fetchReplies(request)
         println("result: $result")
