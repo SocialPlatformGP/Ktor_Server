@@ -1,7 +1,8 @@
 package com.example.routes.post
 
-import com.example.data.responses.PostResponse
+import com.example.data.requests.PostRequest
 import com.example.repository.PostRepository
+import com.example.utils.DataError
 import com.example.utils.EndPoint
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,11 +14,16 @@ fun Route.updatePost(
     postRepository: PostRepository
 ) {
     post(EndPoint.Post.UpdatePost.route) {
-        val request = call.receiveNullable<PostResponse>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-            return@post
-        }
+        val request = call.receiveNullable<PostRequest.UpdateRequest>() ?: return@post call.respond(
+            HttpStatusCode.BadRequest,
+            DataError.Network.BAD_REQUEST
+        )
+
         val wasAcknowledged = postRepository.updatePost(request)
-        call.respond(HttpStatusCode.OK, wasAcknowledged)
+        if (!wasAcknowledged) {
+            return@post call.respond(HttpStatusCode.InternalServerError, DataError.Network.NOT_FOUND)
+        } else {
+            call.respond(HttpStatusCode.OK)
+        }
     }
 }

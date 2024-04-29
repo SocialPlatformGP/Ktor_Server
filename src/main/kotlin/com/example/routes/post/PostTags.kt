@@ -2,6 +2,7 @@ package com.example.routes.post
 
 import com.example.data.requests.AddTagRequest
 import com.example.repository.PostRepository
+import com.example.utils.DataError
 import com.example.utils.EndPoint
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -21,12 +22,12 @@ fun Route.postTags(
         call.respond(HttpStatusCode.OK, wasAcknowledged)
 
     }
-    get(EndPoint.Post.Tags.GetAllTags.route) {
-        val response = postRepository.getTags()
+    post(EndPoint.Post.Tags.GetAllTags.route) {
+        val request = call.receiveNullable<String>()?: call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+        val response = postRepository.getTags(request as? String ?: "")
         call.respond(HttpStatusCode.OK, response)
 
     }
 }
-
 
 

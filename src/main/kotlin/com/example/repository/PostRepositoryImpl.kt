@@ -4,6 +4,7 @@ import com.example.data.models.post.Post
 import com.example.data.models.post.Tag
 import com.example.data.models.user.User
 import com.example.data.models.post.now
+import com.example.data.requests.PostRequest
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 import kotlinx.datetime.LocalDateTime
@@ -22,8 +23,10 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
 
     }
 
-    override suspend fun updatePost(postRequest: PostResponse): Boolean {
-        return postCollection.updateOne(Post::id eq postRequest.id, (postRequest.toEntity())).wasAcknowledged()
+    override suspend fun updatePost(postRequest: PostRequest.UpdateRequest): Boolean {
+        postCollection.findOne(Post::id eq postRequest.post.id) ?: return false
+        val post = postRequest.post.copy(lastModified = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds)
+        return postCollection.updateOne(Post::id eq postRequest.post.id, post).wasAcknowledged()
     }
 
     override suspend fun deletePost(postRequest: UpdateOrDeletePostRequest): Boolean {
@@ -171,8 +174,8 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
         return tagCollection.insertOne(tag).wasAcknowledged()
     }
 
-    override suspend fun getTags(): List<Tag> {
-        return tagCollection.find().toList()
+    override suspend fun getTags(request: String): List<Tag> {
+        return tagCollection.find(Tag::communityID eq request).toList()
     }
 
     override suspend fun getNewPosts(request: Long): List<PostResponse> {

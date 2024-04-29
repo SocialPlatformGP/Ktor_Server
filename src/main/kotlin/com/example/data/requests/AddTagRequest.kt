@@ -7,10 +7,12 @@ data class AddTagRequest(
     val label: String = "",
     val intColor: Int = 0,
     val hexColor: String = "#000000",
+    val communityID: String = ""
 ){
     fun toEntity() = Tag(
         label = label,
         intColor = intColor,
-        hexColor = hexColor
+        hexColor = hexColor,
+        communityID = communityID
     )
 }
