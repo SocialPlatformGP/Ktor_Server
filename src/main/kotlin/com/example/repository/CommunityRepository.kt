@@ -20,5 +20,7 @@ interface CommunityRepository {
     suspend fun checkCode(request: CommunityRequest.JoinCommunity): Boolean
     suspend fun isrequireApproval(request: CommunityRequest.JoinCommunity): Boolean
     suspend fun isRequestExist(request: CommunityRequest.JoinCommunity): Boolean
+    suspend fun deleteCommunity(request: CommunityRequest.DeleteCommunity): Boolean
+    suspend fun editCommunity(request: CommunityRequest.EditCommunity): Boolean
 
 }

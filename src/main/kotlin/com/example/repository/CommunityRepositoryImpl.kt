@@ -9,6 +9,7 @@ import com.example.routes.community.request.CommunityRequest
 import com.example.utils.DataError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 import org.litote.kmongo.setTo
@@ -102,6 +103,29 @@ class CommunityRepositoryImpl(db: CoroutineDatabase) : CommunityRepository {
         val comm = communities.findOne(CommunityEntity::id eq userRequest.communityId) ?: return false
         communities.updateOne(CommunityEntity::id eq userRequest.communityId, comm.copy(members = comm.members.plus( userRequest.userId to false)))
         communityRequests.deleteOne(CommunityMemberRequest::id eq request.requestId)
+        return true
+    }
+
+    override suspend fun deleteCommunity(request: CommunityRequest.DeleteCommunity): Boolean {
+        communities.deleteOne(CommunityEntity::id eq request.communityId)
+        val usersComm = userCommunities.find(UserCommunities::groups contains  request.communityId).toList()
+        usersComm.forEach {user->
+            userCommunities.updateOne(UserCommunities::id eq user.id, user.copy(groups = user.groups.filter { it != request.communityId }))
+        }
+        communityRequests.deleteMany(CommunityMemberRequest::communityId eq request.communityId)
+        return true
+    }
+
+    override suspend fun editCommunity(request: CommunityRequest.EditCommunity): Boolean {
+        val comm = communities.findOne(CommunityEntity::id eq request.community.id) ?: return false
+        val editedComm = comm.copy(
+            name = request.community.name,
+            description = request.community.description,
+            allowAnyEmailDomain = request.community.allowAnyEmailDomain,
+            allowedEmailDomains = request.community.allowedEmailDomains,
+            isAdminApprovalRequired = request.community.isAdminApprovalRequired
+        )
+        communities.updateOne(CommunityEntity::id eq request.community.id, editedComm)
         return true
     }
 
