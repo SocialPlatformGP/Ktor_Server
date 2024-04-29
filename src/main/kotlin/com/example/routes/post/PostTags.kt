@@ -14,17 +14,14 @@ fun Route.postTags(
     postRepository: PostRepository
 ) {
     post(EndPoint.Post.Tags.InsertTag.route) {
-        val request = call.receiveNullable<AddTagRequest>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-            return@post
-        }
+        val request = call.receiveNullable<AddTagRequest>() ?: return@post call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
         val wasAcknowledged = postRepository.insertTag(request.toEntity())
         call.respond(HttpStatusCode.OK, wasAcknowledged)
 
     }
     post(EndPoint.Post.Tags.GetAllTags.route) {
-        val request = call.receiveNullable<String>()?: call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
-        val response = postRepository.getTags(request as? String ?: "")
+        val request = call.receiveNullable<String>()?:return@post call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+        val response = postRepository.getTags(request )
         call.respond(HttpStatusCode.OK, response)
 
     }
