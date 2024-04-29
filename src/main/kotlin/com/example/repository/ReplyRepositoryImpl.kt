@@ -33,13 +33,13 @@ class ReplyRepositoryImpl(db: CoroutineDatabase) : ReplyRepository {
     }
 
     override suspend fun updateReply(request: ReplyRequest.UpdateRequest): Boolean {
-        val reply = replyCollection.findOneById(request.reply.id) ?: return false
-        return replyCollection.updateOneById(reply.id, request.reply).wasAcknowledged()
+        val reply = replyCollection.findOne(Reply::id eq request.replyId) ?: return false
+        return replyCollection.updateOne(Reply::id eq reply.id,reply.copy(content = request.replyContent)).wasAcknowledged()
     }
 
     override suspend fun deleteReply(request: ReplyRequest.DeleteRequest): Boolean {
-        val reply = replyCollection.findOneById(request.replyId) ?: return false
-        return replyCollection.deleteOneById(reply.id).wasAcknowledged()
+        val reply = replyCollection.findOne(Reply::id eq request.replyId) ?: return false
+        return replyCollection.deleteOne(Reply::id eq reply.id).wasAcknowledged()
     }
 
     override suspend fun upvoteReply(request: ReplyRequest.UpvoteRequest): Boolean {

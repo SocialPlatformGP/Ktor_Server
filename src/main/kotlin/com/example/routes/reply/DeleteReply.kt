@@ -12,14 +12,14 @@ import io.ktor.server.routing.*
 fun Route.deleteReply(
     replyRepository: ReplyRepository
 ) {
-    delete(EndPoint.Reply.DeleteReply.route) {
-        val request = call.receiveNullable<ReplyRequest.DeleteRequest>() ?:return@delete
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
-
-
+    post(EndPoint.Reply.DeleteReply.route) {
+        val request = call.receiveNullable<ReplyRequest.DeleteRequest>() ?: return@post call.respond(
+            HttpStatusCode.BadRequest,
+            "مش عارف استقبل الjson"
+        )
         val wasAcknowledged = replyRepository.deleteReply(request)
         if (!wasAcknowledged) {
-            return@delete  call.respond(HttpStatusCode.Conflict, message = "Error Deleting the reply")
+            return@post call.respond(HttpStatusCode.Conflict, message = "Error Deleting the reply")
         }
         call.respond(HttpStatusCode.OK, message = "Reply deleted successfully")
     }

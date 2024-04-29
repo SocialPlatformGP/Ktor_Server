@@ -9,7 +9,7 @@ sealed class ReplyRequest{
     @Serializable
     data class FetchRequest(val postId: String): ReplyRequest()
     @Serializable
-    data class UpdateRequest(val reply: Reply): ReplyRequest()
+    data class UpdateRequest(val replyId: String, val replyContent: String): ReplyRequest()
     @Serializable
     data class UpvoteRequest(val replyId: String, val userId: String): ReplyRequest()
     @Serializable
