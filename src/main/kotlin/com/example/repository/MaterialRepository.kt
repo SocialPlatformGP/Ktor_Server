@@ -2,6 +2,7 @@ package com.example.repository
 
 import com.example.data.models.material.MaterialFile
 import com.example.data.models.material.MaterialFolder
+import com.example.data.requests.MaterialRequest
 import com.example.data.responses.MaterialResponse
 
 interface MaterialRepository {
@@ -17,4 +18,5 @@ interface MaterialRepository {
     ):MaterialResponse
 
     suspend fun deleteFile(id: String, path: String): MaterialResponse
+    suspend fun renameFolder(request: MaterialRequest.RenameFolderRequest): MaterialResponse
 }

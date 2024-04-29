@@ -17,6 +17,9 @@ fun Route.materialRouting(
      * Route for accessing files.
      */
     accessFiles()
+    renameFolder(
+        materialRepository = materialRepository
+    )
     /**
      * Route for getting files.
      */
