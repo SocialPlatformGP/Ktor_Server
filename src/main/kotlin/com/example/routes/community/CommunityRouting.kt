@@ -10,6 +10,12 @@ fun Route.communityRouting(
     getUserCommunities(
         commRepo = communityRepo
     )
+    editCommunity(
+        commReo = communityRepo
+    )
+    deleteCommunity(
+        communityRepository = communityRepo
+    )
     createCommunity(
         commRepo = communityRepo
     )
