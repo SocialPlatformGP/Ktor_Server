@@ -1,6 +1,9 @@
 package com.example.utils
 
 sealed class EndPoint(val route: String) {
+    object Assignment{
+        data object CreateAssignment : EndPoint("/createAssignment")
+    }
     object Chat {
         object Room {
             data object RoomExist : EndPoint("/isRoomExist")

@@ -16,6 +16,7 @@ val appModule = module {
     single<PostRepository>{ PostRepositoryImpl(get()) }
     single<ReplyRepository>{ ReplyRepositoryImpl(get()) }
     single<CommunityRepository>{ CommunityRepositoryImpl(get()) }
+    single<AssignmentRepository>{ AssignmentRepositoryImpl(get()) }
     single<HashingService>{ SHA256HashingService() }
     single<MessageDataSource>{ MessageDataSourceImpl(get()) }
     single<TokenService>{ JwtService() }
