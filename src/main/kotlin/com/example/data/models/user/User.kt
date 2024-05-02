@@ -3,8 +3,7 @@ package com.example.data.models.user
 @kotlinx.serialization.Serializable
 data class User(
     val id: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
+    val name: String = "",
     val profilePictureURL: String = "",
     val email: String = "",
     val phoneNumber: String = "",
