@@ -66,7 +66,7 @@ class CommunityRepositoryImpl(db: CoroutineDatabase) : CommunityRepository {
             communityRequests.insertOne(CommunityMemberRequest(
                 communityId = comm.id,
                 userId = user.id,
-                userName = user.firstName+" "+ user.lastName,
+                userName = user.name,
                 userAvatar = user.profilePictureURL
             ))
             return true

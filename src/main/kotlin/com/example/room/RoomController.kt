@@ -42,7 +42,7 @@ class RoomController(
         messageDataSource.addMessageToRoom(message.toMessage())
         val userData = authRepository.findUserById(message.senderId)
         val messageResponse = message.toResponse(
-            senderName = userData?.firstName + " " + userData?.lastName,
+            senderName = userData?.name ?: "",
             senderPicUrl = userData?.profilePictureURL ?: ""
         )
         val result = messageDataSource.getRoom(message.roomId)
