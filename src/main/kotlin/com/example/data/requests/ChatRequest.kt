@@ -24,23 +24,24 @@ sealed class ChatRequest {
         val hasAttachment: Boolean = false,
         val attachment: MessageAttachment = MessageAttachment()
     ) : ChatRequest() {
-        fun toMessage() : Message {
+        fun toMessage(): Message {
             return Message(
                 content = content,
                 roomId = roomId,
                 senderId = senderId,
                 hasAttachment = hasAttachment,
                 attachment = attachment.copy(
-                    url = if(hasAttachment) createFileUrl(
+                    url = if (hasAttachment) createFileUrl(
                         roomId,
                         hasAttachment,
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getMimeTypeFromFileName(attachment.name) else ""
+                    type = if (hasAttachment) attachment.type else ""
                 )
             )
         }
+
         fun toResponse(senderName: String, senderPicUrl: String) =
             ChatResponse.MessageResponse(
                 content = content,
@@ -51,17 +52,17 @@ sealed class ChatRequest {
                 senderId = senderId,
                 hasAttachment = hasAttachment,
                 attachment = attachment.copy(
-                    url = if(hasAttachment) createFileUrl(
+                    url = if (hasAttachment) createFileUrl(
                         roomId,
                         hasAttachment,
                         attachment
                     ) else "",
                     byteArray = byteArrayOf(),
-                    type = if(hasAttachment) getMimeTypeFromFileName(attachment.name) else ""
-                )            )
-        }
+                    type = if (hasAttachment) attachment.type else ""
 
-
+                )
+            )
+    }
 
 
     @Serializable
@@ -164,12 +165,13 @@ fun createFileUrl(
 }
 
 fun getFileExtension(
-     name: String
+    name: String
 ): String {
-    val mimeType: String = URLConnection.guessContentTypeFromName(name)?:"*/*"
+    val mimeType: String = URLConnection.guessContentTypeFromName(name) ?: "*/*"
     println("\n\n\n\n\n MimeType: $mimeType\n\n\n\n\n\n")
     return mimeType
 }
+
 fun getMimeTypeFromFileName(fileName: String): String {
     val extension = fileName.substringAfterLast('.', "")
     return when (extension.lowercase()) {

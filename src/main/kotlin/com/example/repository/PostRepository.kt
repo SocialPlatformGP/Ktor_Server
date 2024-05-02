@@ -17,4 +17,5 @@ interface PostRepository {
     suspend fun insertTag(tag: Tag): Boolean
     suspend fun getTags(request: String): List<Tag>
     suspend fun getNewPosts(request: Long): List<PostResponse>
+    suspend fun getUserPosts(request: String): List<PostResponse>
 }

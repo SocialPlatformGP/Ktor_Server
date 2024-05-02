@@ -174,6 +174,12 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
         return tagCollection.insertOne(tag).wasAcknowledged()
     }
 
+    override suspend fun getUserPosts(request: String): List<PostResponse> {
+        return postCollection.find(Post::authorID eq request).toList().map {
+            it.toResponse()
+        }
+    }
+
     override suspend fun getTags(request: String): List<Tag> {
         return tagCollection.find(Tag::communityID eq request).toList()
     }

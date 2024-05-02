@@ -19,6 +19,9 @@ fun Route.postRouting(
     createPost(
         postRepository = postRepository
     )
+    getUserPosts(
+        postRepository = postRepository
+    )
     /**
      * Route for adding tags to a post.
      */
