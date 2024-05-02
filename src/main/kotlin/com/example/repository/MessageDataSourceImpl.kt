@@ -41,7 +41,7 @@ class MessageDataSourceImpl(
                 val room = rooms.findOne(Room::id eq it.first())
                 if (room != null && room.isPrivate) {
                     return room.copy(
-                        name = receiver.firstName + " " + receiver.lastName,
+                        name = receiver.name,
                         picUrl = receiver.profilePictureURL ?: ""
                     )
                 } else {
@@ -81,7 +81,7 @@ class MessageDataSourceImpl(
         }
 
         return room.copy(
-            name = receiverUser?.firstName + " " + receiverUser?.lastName,
+            name = receiverUser?.name ?: "",
             picUrl = receiverUser?.profilePictureURL ?: ""
         )
     }
@@ -176,7 +176,7 @@ class MessageDataSourceImpl(
     override suspend fun getMessagesFromRoom(roomId: String): List<ChatResponse.MessageResponse> {
         return messages.find(Message::roomId eq roomId).descendingSort(Message::createdAt).toList().map {
             val user = user.findOne(User::id eq it.senderId)
-            it.toResponse(user?.firstName + " " + user?.lastName, user?.profilePictureURL ?: "")
+            it.toResponse(user?.name?:"", user?.profilePictureURL ?: "")
         }
     }
 
@@ -189,13 +189,11 @@ class MessageDataSourceImpl(
             val room = rooms.find { it.id == recent.roomId } ?: return@map null
             if (room.isPrivate) {
                 val test = user.findOne(User::id eq request.userId)
-                println("\n\n\n\n from ${test?.firstName} \n\n\n\n")
                 val userid = room.members.keys.filter { it != request.userId }.firstOrNull()
                 val user = user.findOne(User::id eq userid)
-                println("\n\n\n\nto ${user?.firstName} \n\n\n\n")
                 return@map RecentRoomResponse(
                     roomId = room.id,
-                    title = user?.firstName + " " + user?.lastName,
+                    title = user?.name ?: "",
                     lastMessage = recent.lastMessage,
                     lastMessageTime = recent.lastMessageTime,
                     senderName = "",
@@ -204,7 +202,7 @@ class MessageDataSourceImpl(
                 )
             } else {
                 val sender = user.findOne(User::id eq recent.sender_id)
-                val senderName = if(sender?.id == request.userId) "You" else sender?.firstName + " " + sender?.lastName
+                val senderName = if(sender?.id == request.userId) "You" else sender?.name ?: ""
                 return@map RecentRoomResponse(
                     roomId = room.id,
                     title = room.name,
