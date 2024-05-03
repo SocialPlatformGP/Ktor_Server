@@ -57,6 +57,7 @@ sealed class EndPoint(val route: String) {
         data object UpvoteReply : EndPoint("/upvoteReply")
         data object DownvoteReply : EndPoint("/downvoteReply")
         data object DeleteReply : EndPoint("/deleteReply")
+        data object ReportReply : EndPoint("/reportReply")
 
     }
     object Media {

@@ -48,5 +48,10 @@ fun Route.replyRouting(
      */
     downvoteReply(
         replyRepository = replyRepository
+    )/**
+     * Route for reporting a reply.
+     */
+    reportReply(
+        replyRepository = replyRepository
     )
 }
