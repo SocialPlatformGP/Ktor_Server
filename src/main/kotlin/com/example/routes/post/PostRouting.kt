@@ -64,4 +64,10 @@ fun Route.postRouting(
     getAllPosts(
         postRepository = postRepository
     )
+    /**
+     * Route for reporting posts.
+     */
+    reportPost(
+        postRepository = postRepository
+    )
 }

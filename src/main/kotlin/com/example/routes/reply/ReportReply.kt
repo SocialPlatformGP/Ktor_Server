@@ -19,8 +19,8 @@ fun Route.reportReply(
         )
         val wasAcknowledged = replyRepository.reportReply(request)
         if (!wasAcknowledged) {
-            return@post call.respond(HttpStatusCode.Conflict, message = "Error Deleting the reply")
+            return@post call.respond(HttpStatusCode.Conflict, message = "Error Reporting the reply")
         }
-        call.respond(HttpStatusCode.OK, message = "Reply deleted successfully")
+        call.respond(HttpStatusCode.OK, message = "Reply Reported successfully")
     }
 }

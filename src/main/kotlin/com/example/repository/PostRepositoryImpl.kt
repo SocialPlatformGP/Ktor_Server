@@ -4,16 +4,23 @@ import com.example.data.models.post.Post
 import com.example.data.models.post.Tag
 import com.example.data.models.user.User
 import com.example.data.models.post.now
+import com.example.data.models.reply.Reply
 import com.example.data.requests.PostRequest
+import com.example.data.requests.ReplyRequest
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
+import com.example.data.source.remote.ContentModerationRemoteDataSource
+import com.example.utils.Constants
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
 
-class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
+class PostRepositoryImpl(
+    private val db: CoroutineDatabase,
+    private val moderationRemoteSSource: ContentModerationRemoteDataSource
+) : PostRepository {
     private val postCollection = db.getCollection<Post>()
     private val userCollection = db.getCollection<User>()
     private val tagCollection = db.getCollection<Tag>()
@@ -21,6 +28,19 @@ class PostRepositoryImpl(db: CoroutineDatabase) : PostRepository {
         println("*************************************\ncreate post called: $postRequest\n**********************")
         return postCollection.insertOne(postRequest.toEntity()).wasAcknowledged()
 
+    }
+
+    override suspend fun reportPost(request: PostRequest.ReportRequest): Boolean {
+        val post = postCollection.findOne(Post::id eq request.postId) ?: return false
+        val titleResult = moderationRemoteSSource.validateText(post.title)
+        println("\n\n\n\n\n\ntitle result: $titleResult\n\n\n\n\n\n")
+        val bodyResult = moderationRemoteSSource.validateText(post.body)
+        println("\n\n\n\n\n\nbody result: $bodyResult\n\n\n\n\n\n")
+        post.attachments.filter { it.type == "image" }.forEach {
+            val imageResult = moderationRemoteSSource.validateImage("${ Constants.BASE_URL }${it.url}")
+            println("\n\n\n\n\n\nimage ${it.name} result: $imageResult\n\n\n\n\n\n")
+        }
+        return true
     }
 
     override suspend fun updatePost(postRequest: PostRequest.UpdateRequest): Boolean {
