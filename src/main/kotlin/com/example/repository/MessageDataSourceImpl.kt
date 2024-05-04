@@ -1,9 +1,12 @@
 package com.example.repository
 
 import com.example.data.models.chat.*
+import com.example.data.models.post.Post
 import com.example.data.models.user.User
 import com.example.data.requests.ChatRequest
+import com.example.data.requests.PostRequest
 import com.example.data.responses.ChatResponse
+import com.example.data.source.remote.ContentModerationRemoteDataSource
 import com.example.utils.Constants.BASE_URL
 import com.example.utils.FileUtils
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +22,24 @@ import java.util.*
 import javax.activation.MimeType
 
 class MessageDataSourceImpl(
-    db: CoroutineDatabase
+    private val db: CoroutineDatabase,
+    private val moderationRemoteSSource: ContentModerationRemoteDataSource
 ) : MessageDataSource {
     private val messages = db.getCollection<Message>()
     private val rooms = db.getCollection<Room>()
     private val recentRoom = db.getCollection<RecentRoom>()
     private val userRooms = db.getCollection<UserRooms>()
     private val user = db.getCollection<User>()
+    override suspend fun reportMessage(request: ChatRequest.ReportMessage): Boolean {
+        val message = messages.findOne(Message::id eq request.messageId) ?: return false
+        val textResult = moderationRemoteSSource.validateText(message.content)
+        println("\n\n\n\n\n\ntext result: $textResult\n\n\n\n\n\n")
+        if(message.hasAttachment && message.attachment.type == "image") {
+            val imageResult = moderationRemoteSSource.validateImage("${BASE_URL}${message.attachment.url}")
+            println("\n\n\n\n\n\nimage result: $imageResult\n\n\n\n\n\n")
+        }
+        return true
+    }
     override suspend fun checkRoomExists(request: ChatRequest.RoomExistRequest): Room? {
         val receiver = user.findOne(User::id eq request.receiverId) ?: return null
         val senderRooms = userRooms.findOne(UserRooms::userId eq request.senderId) ?: return createPrivateRoom(

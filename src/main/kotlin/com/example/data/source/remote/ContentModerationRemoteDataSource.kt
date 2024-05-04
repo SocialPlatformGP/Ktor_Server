@@ -1,9 +1,9 @@
 package com.example.data.source.remote
 
-import com.example.data.models.moderation.ValidateTextResponse
+import com.example.data.models.moderation.ValidationResponse
 
 interface ContentModerationRemoteDataSource {
-    suspend fun validateText(text: String): ValidateTextResponse?
-    suspend fun validateImage(url: String): ValidateTextResponse?
+    suspend fun validateText(text: String): ValidationResponse?
+    suspend fun validateImage(url: String): ValidationResponse?
 }
 

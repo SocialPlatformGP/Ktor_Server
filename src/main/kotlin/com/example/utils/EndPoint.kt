@@ -17,6 +17,7 @@ sealed class EndPoint(val route: String) {
 
         object Messages {
             data object FetchChatMessages : EndPoint("/fetchChatMessages")
+            data object ReportMessage : EndPoint("/reportMessage")
         }
 
         object RecentRooms {
@@ -45,6 +46,7 @@ sealed class EndPoint(val route: String) {
         data object GetNewPosts : EndPoint("/getNewPosts")
         data object UpvotePost : EndPoint("/upvotePost")
         data object DownvotePost : EndPoint("/downvotePost")
+        data object ReportPost : EndPoint("/reportPost")
         object Tags {
             data object InsertTag : EndPoint("/insertTag")
             data object GetAllTags : EndPoint("/getAllTags")

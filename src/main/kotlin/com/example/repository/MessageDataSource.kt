@@ -3,11 +3,12 @@ package com.example.repository
 import com.example.data.models.chat.Message
 import com.example.data.models.chat.Room
 import com.example.data.requests.ChatRequest
+import com.example.data.requests.PostRequest
 import com.example.data.responses.ChatResponse
 
 interface MessageDataSource {
     suspend fun checkRoomExists(request: ChatRequest.RoomExistRequest): Room?
-
+    suspend fun reportMessage(request: ChatRequest.ReportMessage): Boolean
     suspend fun createGroupRoom(request: ChatRequest.CreateGroupRoom): Room
 
     suspend fun getRoom(roomId: String): Room

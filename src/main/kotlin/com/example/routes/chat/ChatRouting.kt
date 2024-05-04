@@ -77,4 +77,10 @@ fun Route.chatRouting(
     checkRoomExist(
         messageDataSource = messageDataSource
     )
+    /**
+     * Route for reporting messages.
+     */
+    reportMessage(
+        messageSource = messageDataSource
+    )
 }

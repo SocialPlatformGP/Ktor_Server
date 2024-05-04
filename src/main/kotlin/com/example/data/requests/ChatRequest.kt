@@ -17,6 +17,12 @@ sealed class ChatRequest {
     data class FetchMessages(val roomId: String) : ChatRequest()
 
     @Serializable
+    data class ReportMessage(
+        val messageId: String,
+        val roomId: String,
+        val reporterId: String
+    ) : ChatRequest()
+    @Serializable
     data class SendMessage(
         val content: String = "",
         val roomId: String = "",
