@@ -20,7 +20,7 @@ import org.litote.kmongo.reactivestreams.KMongo
 val appModule = module {
     single<AuthRepository>{ AuthRepositoryImpl(get()) }
     single<MaterialRepository>{ MaterialRepositoryImpl(get()) }
-    single<PostRepository>{ PostRepositoryImpl(get()) }
+    single<PostRepository>{ PostRepositoryImpl(get(), get()) }
     single<ReplyRepository>{ ReplyRepositoryImpl(get(), get()) }
     single<CommunityRepository>{ CommunityRepositoryImpl(get()) }
     single<AssignmentRepository>{ AssignmentRepositoryImpl(get()) }
@@ -38,7 +38,7 @@ val appModule = module {
         }
     }
     single<ContentModerationRemoteDataSource>{ ContentModerationRemoteDataSourceImpl(get()) }
-    single<MessageDataSource>{ MessageDataSourceImpl(get()) }
+    single<MessageDataSource>{ MessageDataSourceImpl(get(), get()) }
     single<TokenService>{ JwtService() }
     single {
         RoomController(get(), get())
