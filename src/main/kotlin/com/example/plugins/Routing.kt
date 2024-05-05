@@ -32,7 +32,6 @@ fun Application.configureRouting(
         materialRouting(materialRepository)
         replyRouting(replyRepository)
         communityRouting(communityRepository)
-        assignmentRouting(assignmentRepository)
-
+        assignmentRouting(assignmentRepository,communityRepository)
     }
 }

@@ -9,18 +9,25 @@ import org.litote.kmongo.eq
 
 class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
     private val assignments = db.getCollection<AssignmentEntity>()
-    private val attachments = db.getCollection<AssignmentAttachment>()
     private val userAssignments = db.getCollection<UserAssignmentSubmission>()
 
     override suspend fun createAssignment(request: Assignment): Boolean {
         return assignments.insertOne(request.toEntity()).wasAcknowledged()
     }
 
-    override suspend fun getAttachments(userId: String, assignmentId: String): List<AssignmentAttachment> {
-        return attachments.find(
+    override suspend fun getAttachments(userId: String, assignmentId: String): UserAssignmentSubmission? {
+        return userAssignments.findOne(
             UserAssignmentSubmission::assignmentId eq assignmentId,
             UserAssignmentSubmission::userId eq userId
-        ).toList()
+        )
+    }
+
+    override suspend fun getAssignment(request: String): Assignment? {
+        return assignments.findOne(AssignmentEntity::id eq request)?.toModel()
+    }
+
+    override suspend fun getSubmissions(request: String): List<UserAssignmentSubmission> {
+        return userAssignments.find(UserAssignmentSubmission::assignmentId eq request).toList()
     }
 
     override suspend fun submitAssignment(
@@ -49,6 +56,7 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
     }
 
     override suspend fun getAssignments(communityId: String): List<Assignment> {
+
         return assignments.find(AssignmentEntity::communityId eq communityId).toList().map { it.toModel() }
     }
 }
