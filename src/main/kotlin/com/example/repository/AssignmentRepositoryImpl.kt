@@ -70,6 +70,14 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
 
     }
 
+    override suspend fun turnInAssignment(request: String): Boolean {
+        val userAssignment = userAssignments.findOne(UserAssignmentSubmission::id eq request) ?: return false
+        return userAssignments.updateOne(
+            UserAssignmentSubmission::id eq request,
+            userAssignment.copy(isTurnedIn = true)
+        ).wasAcknowledged()
+    }
+
     override suspend fun getAssignments(communityId: String): List<Assignment> {
 
         return assignments.find(AssignmentEntity::communityId eq communityId).toList().map { it.toModel() }

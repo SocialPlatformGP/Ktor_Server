@@ -19,4 +19,5 @@ interface AssignmentRepository {
     suspend fun getAssignment(request: String): Assignment?
     suspend fun getSubmissions(request: String): List<UserAssignmentSubmission>
     suspend fun submitReview(request: AssignmentRequest.SubmitReview): Boolean
+    suspend fun turnInAssignment(request: String): Boolean
 }

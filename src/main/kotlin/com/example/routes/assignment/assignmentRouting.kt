@@ -8,10 +8,12 @@ fun Routing.assignmentRouting(
     assignmentRepository: AssignmentRepository,
     communityRepository: CommunityRepository
 ) {
+    turnInAssignment(assignmentRepository)
     getAssignment(assignmentRepository)
     getSubmissions(assignmentRepository)
     createAssignment(assignmentRepository)
     submitAssignment(assignmentRepository)
+    submitReview(assignmentRepository)
     getAssignments(
         assignmentRepository,
         communityRepository
