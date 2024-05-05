@@ -3,6 +3,7 @@ package com.example.repository
 import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.AssignmentAttachment
 import com.example.data.models.assignment.UserAssignmentSubmission
+import com.example.data.requests.AssignmentRequest
 import kotlinx.coroutines.flow.Flow
 
 interface AssignmentRepository {
@@ -17,4 +18,5 @@ interface AssignmentRepository {
     suspend fun getAssignments(communityId: String): List<Assignment>
     suspend fun getAssignment(request: String): Assignment?
     suspend fun getSubmissions(request: String): List<UserAssignmentSubmission>
+    suspend fun submitReview(request: AssignmentRequest.SubmitReview): Boolean
 }

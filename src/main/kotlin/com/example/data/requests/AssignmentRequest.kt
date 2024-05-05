@@ -19,4 +19,14 @@ sealed interface AssignmentRequest {
         val userId: String,
         val attachments: List<AssignmentAttachment>
     ) : AssignmentRequest
+    @Serializable
+    data class GetAssignmentById(val assignmentId: String): AssignmentRequest
+    @Serializable
+    data class GetAssignmentSubmissions(val assignmentId: String): AssignmentRequest
+    @Serializable
+    data class SubmitReview(
+        val submissionId: String,
+        val grade: Int,
+        val feedback: String
+    ): AssignmentRequest
 }

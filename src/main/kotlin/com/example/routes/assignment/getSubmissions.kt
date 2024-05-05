@@ -12,10 +12,10 @@ fun Route.getSubmissions(
     assignmentRepository: AssignmentRepository
 ) {
     post("getSubmissions") {
-        val request = call.receiveNullable<String>() ?: return@post call.respond(
+        val request = call.receiveNullable<AssignmentRequest.GetAssignmentSubmissions>() ?: return@post call.respond(
             HttpStatusCode.BadRequest
         )
-        val result = assignmentRepository.getSubmissions(request)
+        val result = assignmentRepository.getSubmissions(request.assignmentId)
         call.respond(HttpStatusCode.OK, result)
 
     }
