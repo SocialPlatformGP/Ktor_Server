@@ -49,6 +49,7 @@ data class AssignmentEntity(
     val acceptLateSubmissions: Boolean = false,
     val createdAt: Long =  LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
     val creatorId: String = "",
+    val creatorName:String = "",
     val communityId: String = "",
 ){
     fun toModel() = Assignment(
