@@ -19,4 +19,5 @@ fun Routing.assignmentRouting(
         communityRepository
     )
     getAttachments(assignmentRepository)
+    unSubmitAssignment(assignmentRepository)
 }

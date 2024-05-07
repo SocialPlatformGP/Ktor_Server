@@ -6,6 +6,11 @@ import com.example.data.models.assignment.AssignmentEntity
 import com.example.data.models.assignment.UserAssignmentSubmission
 import com.example.data.models.user.User
 import com.example.data.requests.AssignmentRequest
+import com.example.utils.now
+import kotlinx.datetime.Clock.System.now
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
@@ -31,7 +36,15 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
     }
 
     override suspend fun getSubmissions(request: String): List<UserAssignmentSubmission> {
-        return userAssignments.find(UserAssignmentSubmission::assignmentId eq request).toList()
+        return userAssignments.find(UserAssignmentSubmission::assignmentId eq request).toList().filter {
+            it.isTurnedIn
+        }
+    }
+
+    override suspend fun canSubmit(request: String): Boolean {
+        val assignment = assignments.findOne(AssignmentEntity::id eq request) ?: return false
+        if(assignment.acceptLateSubmissions) return true
+        return  LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds < assignment.dueDate
     }
 
     override suspend fun submitAssignment(
@@ -74,7 +87,21 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
         val userAssignment = userAssignments.findOne(UserAssignmentSubmission::id eq request) ?: return false
         return userAssignments.updateOne(
             UserAssignmentSubmission::id eq request,
-            userAssignment.copy(isTurnedIn = true)
+            userAssignment.copy(
+                isTurnedIn = true,
+                submittedAt = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds
+            )
+        ).wasAcknowledged()
+    }
+
+    override suspend fun unSubmitAssignment(request: String): Boolean {
+        val userAssignment = userAssignments.findOne(UserAssignmentSubmission::id eq request) ?: return false
+        return userAssignments.updateOne(
+            UserAssignmentSubmission::id eq request,
+            userAssignment.copy(
+                isTurnedIn = false,
+                submittedAt = 0L
+            )
         ).wasAcknowledged()
     }
 

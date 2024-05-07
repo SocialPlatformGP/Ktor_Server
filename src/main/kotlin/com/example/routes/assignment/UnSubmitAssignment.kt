@@ -7,17 +7,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.turnInAssignment(
+fun Route.unSubmitAssignment(
     assignmentRepository: AssignmentRepository
 ){
-    post("turnInAssignment"){
+    post("unSubmitAssignment"){
         val request = call.receiveNullable<String>()?: return@post call.respond(HttpStatusCode.BadRequest)
-        val canSubmit = assignmentRepository.canSubmit(request)
-        if(canSubmit.not()){
-            call.respond(HttpStatusCode.RequestTimeout, "Assignment is late")
-            return@post
-        }
-        val result = assignmentRepository.turnInAssignment(request)
+        val result = assignmentRepository.unSubmitAssignment(request)
         if(result){
             call.respond(HttpStatusCode.OK)
         }else{
