@@ -20,4 +20,5 @@ fun Routing.assignmentRouting(
     )
     getAttachments(assignmentRepository)
     unSubmitAssignment(assignmentRepository)
+    generateCsv(assignmentRepository)
 }

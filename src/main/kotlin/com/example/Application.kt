@@ -6,8 +6,17 @@ import com.example.room.RoomController
 import com.example.security.TokenService
 import com.example.security.hashing.HashingService
 import com.example.security.token.TokenConfig
+import com.example.utils.CsvUtils
+import com.example.utils.CsvUtils.generateCsv
 import io.ktor.server.application.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.inject
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
+import java.time.Year
 
 
 fun main(args: Array<String>) =
@@ -49,6 +58,28 @@ fun Application.module() {
         communityRepository = communityRepository,
         assignmentRepository = assignmentRepository
     )
-
-
 }
+
+//data class Movie(
+//    val year: Year,
+//    val score: Int,
+//    val title: String,
+//)
+//val dummy = listOf(
+//    Movie(Year.of(1994), 9, "The Shawshank Redemption"),
+//    Movie(Year.of(1972), 9, "The Godfather"),
+//    Movie(Year.of(1974), 9, "The Godfather: Part II"),
+//    Movie(Year.of(2008), 9, "The Dark Knight"),
+//    Movie(Year.of(1957), 9, "")
+//)
+//fun OutputStream.writeCsv(movies: List<Movie>) {
+//    val writer = bufferedWriter()
+//    writer.write(""""Year", "Score", "Title"""")
+//    writer.newLine()
+//    movies.forEach {
+//        writer.write("${it.year}, ${it.score}, \"${it.title}\"")
+//        writer.newLine()
+//    }
+//    writer.flush()
+//
+//}
