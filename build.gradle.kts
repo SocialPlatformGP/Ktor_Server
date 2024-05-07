@@ -88,6 +88,9 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.8")
     implementation("com.google.firebase:firebase-admin:9.0.0")
 
+    //
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3") // for JVM platform
+
 
 
 
