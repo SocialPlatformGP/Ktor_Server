@@ -3,19 +3,15 @@ package com.example.utils
 import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.UserAssignmentSubmission
 import com.itextpdf.text.BaseColor
-import com.itextpdf.text.pdf.PdfWriter
-import kotlinx.datetime.Instant
-import org.h2.store.fs.FileUtils.R
-import java.io.BufferedReader
-import java.io.FileOutputStream
-import java.io.FileReader
-import java.io.FileWriter
-import kotlin.time.toJavaDuration
 import com.itextpdf.text.Document
 import com.itextpdf.text.Element
 import com.itextpdf.text.Font
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
+import com.itextpdf.text.pdf.PdfWriter
+import org.apache.poi.ss.usermodel.CellType
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import java.io.*
 
 
 object CsvUtils {
@@ -24,7 +20,7 @@ object CsvUtils {
         val records = mutableListOf<Record>()
         assignments.forEachIndexed { index, assignment ->
             headers.add(assignment)
-            var list = MutableList(assignments.size) { "" }
+            var list: MutableList<String>
             userSubmissions.filter { it.assignmentId == assignment.id }.forEach { submission ->
                 list = MutableList(assignments.size) { "" }
                 list.set(index,submission.grade.toString())
@@ -48,8 +44,34 @@ object CsvUtils {
                 writer.append("${record.userName} ,${record.grade.joinToString(",") { it }}\n")
             }
         }
+        val data =readExcelFileToUsers("test.xlsx")
+        data.forEach { println(it) }
 
     }
+fun readExcelFileToUsers(filePath: String): List<User> {
+    val fis = FileInputStream(File(filePath))
+    val workbook = XSSFWorkbook(fis)
+    val sheet = workbook.getSheetAt(0)
+    val users = mutableListOf<User>()
+
+    for (row in sheet) {
+        val idCell = row.getCell(0)
+        val nameCell = row.getCell(1)
+        val emailCell = row.getCell(2)
+
+        if (idCell.cellType == CellType.NUMERIC && nameCell.cellType == CellType.STRING && emailCell.cellType == CellType.STRING) {
+            val user = User(
+                id = idCell.numericCellValue.toInt(),
+                name = nameCell.stringCellValue,
+                email = emailCell.stringCellValue
+            )
+            users.add(user)
+        }
+    }
+
+    fis.close()
+    return users
+}
     fun convertCsvToPdf(csvFile: String, pdfFile: String) {
         val document = Document()
         PdfWriter.getInstance(document, FileOutputStream(pdfFile))
@@ -104,3 +126,4 @@ object CsvUtils {
 }
 
 data class Record(val userName: String, val grade: List<String>)
+data class User(val id: Int, val name: String, val email: String)

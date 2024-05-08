@@ -92,6 +92,7 @@ dependencies {
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3") // for JVM platform
 
     implementation ("com.itextpdf:itextpdf:5.5.13")
+    implementation("org.apache.poi:poi-ooxml:5.1.0")
 
 
 
