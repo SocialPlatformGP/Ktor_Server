@@ -38,11 +38,13 @@ val appModule = module {
         }
     }
     single<ContentModerationRemoteDataSource>{ ContentModerationRemoteDataSourceImpl(get()) }
+    single<CalendarRepository>{ CalendarRepositoryImpl(get()) }
     single<MessageDataSource>{ MessageDataSourceImpl(get(), get()) }
     single<TokenService>{ JwtService() }
     single {
         RoomController(get(), get())
     }
+
 
     single {
         KMongo.createClient().coroutine.getDatabase("EduLink_db")

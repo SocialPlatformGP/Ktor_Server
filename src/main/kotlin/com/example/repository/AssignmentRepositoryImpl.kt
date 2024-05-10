@@ -4,6 +4,9 @@ import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.AssignmentAttachment
 import com.example.data.models.assignment.AssignmentEntity
 import com.example.data.models.assignment.UserAssignmentSubmission
+import com.example.data.models.calendar.CalendarEvent
+import com.example.data.models.calendar.CommunityEvents
+import com.example.data.models.calendar.UserEvents
 import com.example.data.models.user.User
 import com.example.data.requests.AssignmentRequest
 import com.example.utils.now
@@ -18,9 +21,28 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
     private val assignments = db.getCollection<AssignmentEntity>()
     private val userAssignments = db.getCollection<UserAssignmentSubmission>()
     private val users = db.getCollection<User>()
+    private val events = db.getCollection<CalendarEvent>()
+    private val communityEvents = db.getCollection<CommunityEvents>()
+
 
     override suspend fun createAssignment(request: Assignment): Boolean {
         val user = users.findOne(User::id eq request.creatorId)
+        val event = CalendarEvent(
+            date = request.dueDate,
+            title = request.title,
+            type = "Assignment",
+            description = request.description,
+        )
+        events.insertOne(event)
+        val communityEvent = communityEvents.findOne(CommunityEvents::communityId eq request.communityId)
+        if (communityEvent != null) {
+            communityEvents.updateOne(
+                CommunityEvents::communityId eq request.communityId,
+                communityEvent.copy(events = communityEvent.events + event)
+            )
+        } else {
+            communityEvents.insertOne(CommunityEvents(request.communityId, listOf(event)))
+        }
         return assignments.insertOne(request.copy(creatorName = user?.name ?: "").toEntity()).wasAcknowledged()
     }
 
