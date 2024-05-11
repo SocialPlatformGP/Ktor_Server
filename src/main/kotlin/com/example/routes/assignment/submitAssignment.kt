@@ -1,7 +1,8 @@
 package com.example.routes.assignment
 
 import com.example.data.requests.AssignmentRequest
-import com.example.repository.AssignmentRepository
+import com.example.repository.assignment.AssignmentRepository
+import com.example.utils.AssignmentError
 import com.example.utils.FileUtils
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -16,13 +17,13 @@ fun Route.submitAssignment(
 ) {
     post("submitAssignment") {
         val request = call.receiveNullable<AssignmentRequest.SubmitRequest>()
-            ?: return@post call.respond(HttpStatusCode.BadRequest)
+            ?: return@post call.respond(HttpStatusCode.BadRequest,AssignmentError.SERVER_ERROR)
         if (request.attachments.isEmpty()) {
             val result = assignmentRepository.submitAssignment(request.assignmentId, request.userId, request.attachments)
             if (result) {
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.InternalServerError)
+                call.respond(HttpStatusCode.InternalServerError, AssignmentError.SERVER_ERROR)
             }
         } else {
             val assignmentId = UUID.randomUUID().toString()
@@ -43,7 +44,7 @@ fun Route.submitAssignment(
             if (result) {
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.InternalServerError)
+                call.respond(HttpStatusCode.InternalServerError, AssignmentError.SERVER_ERROR)
             }
         }
 

@@ -1,8 +1,9 @@
 package com.example.routes.post
 
 import com.example.data.requests.UpdateOrDeletePostRequest
-import com.example.repository.PostRepository
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,7 +15,7 @@ fun Route.deletePost(
 ) {
     post(EndPoint.Post.DeletePost.route) {
         val request = call.receiveNullable<UpdateOrDeletePostRequest>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
+            call.respond(HttpStatusCode.BadRequest, PostError.SERVER_ERROR)
             return@post
         }
         val wasAcknowledged = postRepository.deletePost(request)

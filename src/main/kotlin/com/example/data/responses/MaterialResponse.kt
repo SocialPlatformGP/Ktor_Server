@@ -1,8 +1,7 @@
 package com.example.data.responses
 
-import com.example.data.models.material.MaterialFile
-import com.example.data.models.material.MaterialFolder
 import kotlinx.serialization.Serializable
+
 @Serializable
 sealed class MaterialResponse {
     @Serializable

@@ -1,10 +1,9 @@
 package com.example.routes.community
 
-import com.example.data.models.community.Community
-import com.example.data.models.community.UserCommunities
-import com.example.repository.CommunityRepository
+import com.example.repository.community.CommunityRepository
 import com.example.routes.community.request.CommunityRequest
-import com.example.utils.DataError
+import com.example.utils.CalendarError
+import com.example.utils.CommunityError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,7 +15,7 @@ fun Route.getUserCommunities(
     commRepo: CommunityRepository
 ){
     post("/getUserCommunities") {
-        val userId = call.receiveNullable<String>()?: return@post call.respond(HttpStatusCode.BadRequest,DataError.Network.BAD_REQUEST)
+        val userId = call.receiveNullable<String>()?: return@post call.respond(HttpStatusCode.BadRequest,CalendarError.SERVER_ERROR)
         val result = commRepo.getUserCommunities(userId)
         call.respond(HttpStatusCode.OK,result)
     }
@@ -26,7 +25,7 @@ fun Route.communityLogout(
     commRepo: CommunityRepository
 ){
     post("/communityLogout") {
-        val request = call.receiveNullable<CommunityRequest.LogoutCommunity>()?: return@post call.respond(HttpStatusCode.BadRequest,DataError.Network.BAD_REQUEST)
+        val request = call.receiveNullable<CommunityRequest.LogoutCommunity>()?: return@post call.respond(HttpStatusCode.BadRequest,CommunityError.SERVER_ERROR)
         val result = commRepo.logoutCommunity(request)
         call.respond(HttpStatusCode.OK,result)
     }

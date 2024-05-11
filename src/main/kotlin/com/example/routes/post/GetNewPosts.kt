@@ -1,8 +1,9 @@
 package com.example.routes.post
 
 import com.example.data.models.post.LastUpdated
-import com.example.repository.PostRepository
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,7 +15,7 @@ fun Route.getNewPosts(
 ) {
     post(EndPoint.Post.GetNewPosts.route) {
         val request = call.receiveNullable<LastUpdated>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
+            call.respond(HttpStatusCode.BadRequest, PostError.SERVER_ERROR)
             return@post
         }
         val response = postRepository.getNewPosts(request.lastUpdated)

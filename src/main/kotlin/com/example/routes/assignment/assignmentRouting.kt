@@ -1,7 +1,7 @@
 package com.example.routes.assignment
 
-import com.example.repository.AssignmentRepository
-import com.example.repository.CommunityRepository
+import com.example.repository.assignment.AssignmentRepository
+import com.example.repository.community.CommunityRepository
 import io.ktor.server.routing.*
 
 fun Routing.assignmentRouting(

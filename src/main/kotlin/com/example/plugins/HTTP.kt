@@ -5,7 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.httpsredirect.*
 import io.ktor.server.plugins.partialcontent.*
-import org.litote.kmongo.json
 
 fun Application.configureHTTP() {
     install(CORS) {

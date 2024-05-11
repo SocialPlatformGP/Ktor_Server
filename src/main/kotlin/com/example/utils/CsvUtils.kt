@@ -2,6 +2,8 @@ package com.example.utils
 
 import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.UserAssignmentSubmission
+import com.example.data.models.grades.Grade
+import com.example.data.models.grades.Grades
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.Document
 import com.itextpdf.text.Element
@@ -48,30 +50,53 @@ object CsvUtils {
         data.forEach { println(it) }
 
     }
-fun readExcelFileToUsers(filePath: String): List<User> {
-    val fis = FileInputStream(File(filePath))
-    val workbook = XSSFWorkbook(fis)
-    val sheet = workbook.getSheetAt(0)
-    val users = mutableListOf<User>()
+    fun readExcelFileToUsers(filePath: String): List<Grades> {
+        val fis = FileInputStream(File(filePath))
+        val workbook = XSSFWorkbook(fis)
+        val sheet = workbook.getSheetAt(0)
+        val gradesList = mutableListOf<Grades>()
 
-    for (row in sheet) {
-        val idCell = row.getCell(0)
-        val nameCell = row.getCell(1)
-        val emailCell = row.getCell(2)
+        val headerRow = sheet.getRow(0)
+        var idIndex = -1
+        var nameIndex = -1
+        val gradeIndices = mutableListOf<Int>()
 
-        if (idCell.cellType == CellType.NUMERIC && nameCell.cellType == CellType.STRING && emailCell.cellType == CellType.STRING) {
-            val user = User(
-                id = idCell.numericCellValue.toInt(),
-                name = nameCell.stringCellValue,
-                email = emailCell.stringCellValue
-            )
-            users.add(user)
+        for (cell in headerRow) {
+            when (cell.stringCellValue) {
+                "ID" -> idIndex = cell.columnIndex
+                "Student Name" -> nameIndex = cell.columnIndex
+                else -> gradeIndices.add(cell.columnIndex)
+            }
         }
-    }
 
-    fis.close()
-    return users
-}
+        for (row in sheet) {
+            if (row.rowNum == 0) continue // Skip header row
+
+            val idCell = row.getCell(idIndex)
+            val nameCell = row.getCell(nameIndex)
+
+            if (idCell.cellType == CellType.NUMERIC && nameCell.cellType == CellType.STRING) {
+                val gradeList = gradeIndices.mapNotNull { index ->
+                    val gradeCell = row.getCell(index)
+                    if (gradeCell.cellType == CellType.NUMERIC) {
+                        Grade(
+                            grade = gradeCell.numericCellValue.toInt(),
+                            topic = headerRow.getCell(index).stringCellValue
+                        )
+                    } else null
+                }
+
+                val grades = Grades(
+                    userId = idCell.numericCellValue.toLong().toString(),
+                    userName = nameCell.stringCellValue,
+                    grade = gradeList
+                )
+                gradesList.add(grades)
+            }
+        }
+        fis.close()
+        return gradesList
+    }
     fun convertCsvToPdf(csvFile: String, pdfFile: String) {
         val document = Document()
         PdfWriter.getInstance(document, FileOutputStream(pdfFile))

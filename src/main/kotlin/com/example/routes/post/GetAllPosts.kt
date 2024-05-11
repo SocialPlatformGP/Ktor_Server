@@ -1,6 +1,6 @@
 package com.example.routes.post
 
-import com.example.repository.PostRepository
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
 import io.ktor.http.*
 import io.ktor.server.application.*

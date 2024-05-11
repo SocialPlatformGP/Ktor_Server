@@ -1,16 +1,15 @@
 package com.example.routes.assignment
 
 import com.example.data.requests.AssignmentRequest
-import com.example.data.requests.PostRequest
-import com.example.repository.AssignmentRepository
-import com.example.utils.DataError
-import io.ktor.server.routing.*
+import com.example.repository.assignment.AssignmentRepository
+import com.example.utils.AssignmentError
 import com.example.utils.EndPoint
 import com.example.utils.FileUtils
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import java.io.File
 import java.util.*
 
@@ -19,7 +18,7 @@ fun Route.createAssignment(
 ) {
     post(EndPoint.Assignment.CreateAssignment.route) {
         val request = call.receiveNullable<AssignmentRequest.CreateRequest>()?.assignment ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+            call.respond(HttpStatusCode.BadRequest, AssignmentError.SERVER_ERROR)
             return@post
         }
         if (request.attachments.isEmpty()) {
@@ -27,7 +26,7 @@ fun Route.createAssignment(
             if (result) {
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.InternalServerError)
+                call.respond(HttpStatusCode.InternalServerError, AssignmentError.SERVER_ERROR)
             }
         } else {
             val assignmentId = UUID.randomUUID().toString()
@@ -48,7 +47,7 @@ fun Route.createAssignment(
             if (result) {
                 call.respond(HttpStatusCode.OK)
             } else {
-                call.respond(HttpStatusCode.InternalServerError)
+                call.respond(HttpStatusCode.InternalServerError, AssignmentError.SERVER_ERROR)
             }
         }
 

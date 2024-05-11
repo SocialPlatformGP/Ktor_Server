@@ -1,9 +1,6 @@
 package com.example.routes.auth
 
-import com.example.repository.AuthRepository
-import com.example.security.TokenService
-import com.example.security.hashing.HashingService
-import com.example.security.token.TokenConfig
+import com.example.repository.user.AuthRepository
 import io.ktor.server.routing.*
 
 /**
@@ -16,7 +13,7 @@ import io.ktor.server.routing.*
 fun Route.authRouting(
     authRepository: AuthRepository,
 
-) {
+    ) {
 
     /**
      * Route for getting all users.

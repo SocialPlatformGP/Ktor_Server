@@ -1,6 +1,6 @@
 package com.example.routes.reply
 
-import com.example.repository.ReplyRepository
+import com.example.repository.reply.ReplyRepository
 import io.ktor.server.routing.*
 
 /**
