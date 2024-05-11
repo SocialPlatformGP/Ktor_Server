@@ -10,6 +10,7 @@ sealed interface GradesRequest {
         val content: ByteArray = byteArrayOf(),
         val subject : String = "",
         val communityId: String = "",
+        val creatorId: String = "",
     ): GradesRequest
 
     @Serializable

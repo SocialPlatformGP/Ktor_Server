@@ -8,5 +8,6 @@ fun Route.gradesRouting(
 ) {
     uploadGradesFile(gradesRepository)
     getGrades(gradesRepository)
+    getCreatorGrades(gradesRepository)
 }
 

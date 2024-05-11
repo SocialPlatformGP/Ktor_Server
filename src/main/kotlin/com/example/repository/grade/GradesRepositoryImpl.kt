@@ -15,6 +15,9 @@ class GradesRepositoryImpl(
     override suspend fun uploadGradesFile(grades: List<Grades>): Boolean {
         val users = grades.map { it.userId }
         val oldGrades = gradesDb.find(Grades::userId `in` users).toList()
+        if(grades.map{it.course}.intersect(oldGrades.map { it.course }).size == 0){
+            gradesDb.insertMany(grades)
+        }
         grades.forEach { newGrade ->
             val oldGrade = oldGrades.find { it.userId == newGrade.userId }
             if (oldGrade != null) {
@@ -42,5 +45,9 @@ class GradesRepositoryImpl(
         println(request.userName)
         val user = usersDb.findOne(User::id eq request.userName) ?: return emptyList()
         return gradesDb.find(Grades::userName eq user.name).toList()
+    }
+
+    override suspend fun getCreatorGrades(request: String): List<Grades> {
+        return gradesDb.find(Grades::creatorId eq request).toList()
     }
 }

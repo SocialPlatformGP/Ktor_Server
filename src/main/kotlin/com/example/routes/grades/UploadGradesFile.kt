@@ -29,6 +29,7 @@ fun Route.uploadGradesFile(gradesRepository: GradesRepository) {
         val grades = CsvUtils.readExcelFileToUsers(file.path).map {
             it.copy(
                 course = request.subject,
+                creatorId = request.creatorId,
             )
         }
         val response = gradesRepository.uploadGradesFile(grades)

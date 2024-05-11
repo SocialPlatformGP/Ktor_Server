@@ -19,3 +19,13 @@ fun Route.getGrades(gradesRepository: GradesRepository) {
         call.respond(response)
     }
 }
+fun Route.getCreatorGrades(gradesRepository: GradesRepository) {
+    post("/getCreatorGrades") {
+        val request = call.receiveNullable<String>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest, GradesError.SERVER_ERROR)
+            return@post
+        }
+        val response = gradesRepository.getCreatorGrades(request)
+        call.respond(response)
+    }
+}

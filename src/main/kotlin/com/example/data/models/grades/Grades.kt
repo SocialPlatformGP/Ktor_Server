@@ -10,7 +10,8 @@ data class Grades(
     val communityId : String = "",
     val course: String = "",
     val grade :List<Grade> = emptyList(),
-    val totalGrade : Int = grade.sumOf { it.grade }
+    val totalGrade : Int = grade.sumOf { it.grade },
+    val creatorId : String = "",
 )
 
 @kotlinx.serialization.Serializable
