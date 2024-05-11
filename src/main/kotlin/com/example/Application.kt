@@ -35,6 +35,7 @@ fun Application.module() {
     val communityRepository: CommunityRepository by inject()
     val assignmentRepository: AssignmentRepository by inject()
     val calendarRepository: CalendarRepository by inject()
+    val gradesRepository: GradesRepository by inject()
     val tokenConfig = TokenConfig(
         issuer = "http://0.0.0.0:8085/",
         audience = "http://0.0.0.0:8085/hello",
@@ -59,6 +60,7 @@ fun Application.module() {
         communityRepository = communityRepository,
         assignmentRepository = assignmentRepository,
         calendarRepository = calendarRepository,
+        gradesRepository =  gradesRepository
     )
 }
 

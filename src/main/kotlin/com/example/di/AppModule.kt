@@ -39,6 +39,7 @@ val appModule = module {
     }
     single<ContentModerationRemoteDataSource>{ ContentModerationRemoteDataSourceImpl(get()) }
     single<CalendarRepository>{ CalendarRepositoryImpl(get()) }
+    single<GradesRepository>{ GradesRepositoryImpl(get()) }
     single<MessageDataSource>{ MessageDataSourceImpl(get(), get()) }
     single<TokenService>{ JwtService() }
     single {

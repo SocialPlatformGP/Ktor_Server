@@ -7,6 +7,7 @@ import com.example.routes.auth.*
 import com.example.routes.calendar.calendarRouting
 import com.example.routes.chat.*
 import com.example.routes.community.communityRouting
+import com.example.routes.grades.gradesRouting
 import com.example.routes.material.*
 import com.example.routes.post.*
 import com.example.routes.reply.replyRouting
@@ -25,7 +26,8 @@ fun Application.configureRouting(
     messageDataSource: MessageDataSource,
     communityRepository: CommunityRepository,
     assignmentRepository: AssignmentRepository,
-    calendarRepository: CalendarRepository
+    calendarRepository: CalendarRepository,
+    gradesRepository: GradesRepository
 ) {
     routing {
         authRouting(authRepository)
@@ -36,5 +38,6 @@ fun Application.configureRouting(
         communityRouting(communityRepository)
         assignmentRouting(assignmentRepository,communityRepository)
         calendarRouting(calendarRepository)
+        gradesRouting(gradesRepository)
     }
 }

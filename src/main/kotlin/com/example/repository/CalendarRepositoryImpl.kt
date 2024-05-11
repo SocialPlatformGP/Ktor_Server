@@ -10,7 +10,6 @@ import org.litote.kmongo.eq
 class CalendarRepositoryImpl(db: CoroutineDatabase) : CalendarRepository {
     private val events = db.getCollection<CalendarEvent>()
     private val userEvents = db.getCollection<UserEvents>()
-    private val communityEvents = db.getCollection<CommunityEvents>()
     override suspend fun getUserEvents(request: CalendarRequest.GetUserEvents): List<CalendarEvent> {
         return userEvents.findOne(UserEvents::userId eq request.userId)?.events ?: emptyList()
     }
