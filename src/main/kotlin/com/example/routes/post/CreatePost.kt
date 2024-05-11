@@ -1,9 +1,10 @@
 package com.example.routes.post
 
 import com.example.data.requests.PostRequest
-import com.example.repository.PostRepository
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
 import com.example.utils.FileUtils
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -17,14 +18,14 @@ fun Route.createPost(
 ) {
     post(EndPoint.Post.CreatePost.route) {
         val request = call.receiveNullable<PostRequest.CreateRequest>()?.post ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
+            call.respond(HttpStatusCode.BadRequest, PostError.SERVER_ERROR)
             return@post
         }
         val fieldsBlank = request.title.isBlank() || request.body.isBlank()
         println("request: $request")
         if (fieldsBlank) {
             println("fieldsBlank")
-            call.respond(HttpStatusCode.Conflict, message = "Fields required")
+            call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
             return@post
         }
 
@@ -56,7 +57,7 @@ fun Route.createPost(
             val wasAcknowledged =
                 postRepository.createPost(postRequest = request.toResponse().copy(attachments = attachments))
             if (!wasAcknowledged) {
-                call.respond(HttpStatusCode.Conflict, message = "Error Creating the post")
+                call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
                 return@post
             }
             call.respond(HttpStatusCode.OK, message = "Post created successfully")

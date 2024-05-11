@@ -1,9 +1,10 @@
 package com.example.routes.grades
 
 import com.example.data.requests.GradesRequest
-import com.example.repository.GradesRepository
+import com.example.repository.grade.GradesRepository
 import com.example.utils.CsvUtils
 import com.example.utils.FileUtils
+import com.example.utils.GradesError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -15,7 +16,7 @@ import java.util.*
 fun Route.uploadGradesFile(gradesRepository: GradesRepository) {
     post("/uploadGradesFile") {
         val request = call.receiveNullable<GradesRequest.UploadGradesFile>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest, message = "Can't receive the json")
+            call.respond(HttpStatusCode.BadRequest, GradesError.SERVER_ERROR)
             return@post
         }
         val fileId = UUID.randomUUID().toString()
@@ -34,7 +35,7 @@ fun Route.uploadGradesFile(gradesRepository: GradesRepository) {
         if (response) {
             call.respond(HttpStatusCode.OK, message = "Grades uploaded successfully")
         } else {
-            call.respond(HttpStatusCode.InternalServerError, message = "Failed to upload grades")
+            call.respond(HttpStatusCode.InternalServerError, GradesError.SERVER_ERROR)
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.routes.material
 
-import com.example.repository.MaterialRepository
+import com.example.repository.material.MaterialRepository
 import io.ktor.server.routing.*
 
 /**

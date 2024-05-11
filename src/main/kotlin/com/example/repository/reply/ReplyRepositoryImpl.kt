@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.reply
 
 import com.example.data.models.post.Post
 import com.example.data.models.reply.Reply

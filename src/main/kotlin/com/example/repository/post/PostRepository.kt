@@ -1,8 +1,7 @@
-package com.example.repository
+package com.example.repository.post
 
 import com.example.data.models.post.Tag
 import com.example.data.requests.PostRequest
-import com.example.data.requests.ReplyRequest
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 

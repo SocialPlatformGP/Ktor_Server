@@ -1,10 +1,10 @@
 package com.example.routes.post
 
 import com.example.data.requests.PostRequest
-import com.example.repository.PostRepository
-import com.example.utils.DataError
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
 import com.example.utils.FileUtils
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -19,21 +19,21 @@ fun Route.updatePost(
     post(EndPoint.Post.UpdatePost.route) {
         val request = call.receiveNullable<PostRequest.UpdateRequest>() ?: return@post call.respond(
             HttpStatusCode.BadRequest,
-            DataError.Network.BAD_REQUEST
+            PostError.SERVER_ERROR
         )
 
         val fieldsBlank = request.post.title.isBlank() || request.post.body.isBlank()
 
         if (fieldsBlank) {
             println("fieldsBlank")
-            call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+            call.respond(HttpStatusCode.BadRequest, PostError.SERVER_ERROR)
             return@post
         }
 
         if (request.post.attachments.isEmpty()) {
             val wasAcknowledged = postRepository.updatePost(postRequest = request)
             if (!wasAcknowledged) {
-                call.respond(HttpStatusCode.Conflict, DataError.Network.SERVER_ERROR)
+                call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
                 return@post
             }
             call.respond(HttpStatusCode.OK)
@@ -62,7 +62,7 @@ fun Route.updatePost(
             val wasAcknowledged =
                 postRepository.updatePost(postRequest = request.copy(post = updatedPost))
             if (!wasAcknowledged) {
-                call.respond(HttpStatusCode.Conflict, DataError.Network.BAD_REQUEST)
+                call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
                 return@post
             }
             call.respond(HttpStatusCode.OK)

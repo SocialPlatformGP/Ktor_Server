@@ -1,10 +1,9 @@
-package com.example.repository
+package com.example.repository.assignment
 
 import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.AssignmentAttachment
 import com.example.data.models.assignment.UserAssignmentSubmission
 import com.example.data.requests.AssignmentRequest
-import kotlinx.coroutines.flow.Flow
 
 interface AssignmentRepository {
     suspend fun createAssignment(request: Assignment): Boolean

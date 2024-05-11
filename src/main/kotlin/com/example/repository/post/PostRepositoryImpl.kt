@@ -1,12 +1,10 @@
-package com.example.repository
+package com.example.repository.post
 
 import com.example.data.models.post.Post
 import com.example.data.models.post.Tag
-import com.example.data.models.user.User
 import com.example.data.models.post.now
-import com.example.data.models.reply.Reply
+import com.example.data.models.user.User
 import com.example.data.requests.PostRequest
-import com.example.data.requests.ReplyRequest
 import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 import com.example.data.source.remote.ContentModerationRemoteDataSource

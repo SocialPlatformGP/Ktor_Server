@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.user
 
 import com.example.data.models.user.User
 import com.example.data.models.user.UserSettings

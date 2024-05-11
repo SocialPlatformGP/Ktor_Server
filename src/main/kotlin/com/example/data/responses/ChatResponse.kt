@@ -1,8 +1,8 @@
 package com.example.data.responses
 
-import com.example.data.models.material.MessageAttachment
 import com.example.data.models.chat.RecentRoomResponse
 import com.example.data.models.chat.Room
+import com.example.data.models.material.MessageAttachment
 import kotlinx.serialization.Serializable
 
 sealed class ChatResponse {

@@ -1,6 +1,6 @@
 package com.example.routes.auth
 
-import com.example.repository.AuthRepository
+import com.example.repository.user.AuthRepository
 import com.example.utils.EndPoint
 import io.ktor.http.*
 import io.ktor.server.application.*

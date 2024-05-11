@@ -1,10 +1,9 @@
-package com.example.repository
+package com.example.repository.community
 
 import com.example.data.models.community.Community
 import com.example.data.models.community.CommunityMemberRequest
 import com.example.routes.community.request.CommunityRequest
-import com.example.utils.DataError
-import kotlinx.coroutines.flow.Flow
+
 
 interface CommunityRepository {
     suspend fun getUserCommunities(userId :String): List<Community>

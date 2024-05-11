@@ -1,8 +1,8 @@
 package com.example.routes.material
 
 import com.example.data.requests.MaterialRequest
-import com.example.repository.MaterialRepository
-import com.example.utils.DataError
+import com.example.repository.material.MaterialRepository
+import com.example.utils.MaterialError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -15,7 +15,7 @@ fun Route.renameFolder(
     post("renameFolder") {
         val request = call.receiveNullable<MaterialRequest.RenameFolderRequest>() ?: return@post call.respond(
             HttpStatusCode.BadRequest,
-            DataError.Network.BAD_REQUEST
+            MaterialError.SERVER_ERROR
         )
         val result = materialRepository.renameFolder(request)
         call.respond(HttpStatusCode.OK, result)

@@ -1,7 +1,6 @@
-package com.example.repository
+package com.example.repository.calendar
 
 import com.example.data.models.calendar.CalendarEvent
-import com.example.data.models.calendar.CommunityEvents
 import com.example.data.models.calendar.UserEvents
 import com.example.data.requests.CalendarRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase

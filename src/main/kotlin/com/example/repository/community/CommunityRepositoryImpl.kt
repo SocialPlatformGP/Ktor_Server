@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.community
 
 import com.example.data.models.community.Community
 import com.example.data.models.community.CommunityEntity
@@ -6,13 +6,9 @@ import com.example.data.models.community.CommunityMemberRequest
 import com.example.data.models.community.UserCommunities
 import com.example.data.models.user.User
 import com.example.routes.community.request.CommunityRequest
-import com.example.utils.DataError
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
-import org.litote.kmongo.setTo
 
 class CommunityRepositoryImpl(db: CoroutineDatabase) : CommunityRepository {
     val communities = db.getCollection<CommunityEntity>()

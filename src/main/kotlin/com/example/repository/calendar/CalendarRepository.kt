@@ -1,9 +1,7 @@
-package com.example.repository
+package com.example.repository.calendar
 
 import com.example.data.models.calendar.CalendarEvent
-import com.example.data.models.calendar.UserEvents
 import com.example.data.requests.CalendarRequest
-import kotlinx.coroutines.flow.Flow
 
 interface CalendarRepository {
     suspend fun getUserEvents(request: CalendarRequest.GetUserEvents): List<CalendarEvent>

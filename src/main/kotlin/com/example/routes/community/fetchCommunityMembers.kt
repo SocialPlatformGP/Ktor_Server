@@ -1,8 +1,8 @@
 package com.example.routes.community
 
-import com.example.repository.CommunityRepository
+import com.example.repository.community.CommunityRepository
 import com.example.routes.community.request.CommunityRequest
-import com.example.utils.DataError
+import com.example.utils.CommunityError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -13,7 +13,7 @@ fun Route.fetchCommunityMembers(
     commRepo: CommunityRepository
 ){
     post("fetchCommunityMembersRequests"){
-        val request = call.receiveNullable<CommunityRequest.FetchCommunityMembersRequests>()?: return@post call.respond(HttpStatusCode.BadRequest, DataError.Network.BAD_REQUEST)
+        val request = call.receiveNullable<CommunityRequest.FetchCommunityMembersRequests>()?: return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         val result = commRepo.fetchCommunityMembers(request)
         call.respond(HttpStatusCode.OK, result)
     }

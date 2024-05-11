@@ -1,7 +1,7 @@
 package com.example.routes.post
 
-import com.example.repository.PostRepository
-import com.example.utils.EndPoint
+import com.example.repository.post.PostRepository
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -12,7 +12,7 @@ fun Route.getUserPosts(
     postRepository: PostRepository
 ) {
     post("getUserPosts") {
-        val request = call.receiveNullable<String>() ?: return@post call.respond(HttpStatusCode.BadRequest)
+        val request = call.receiveNullable<String>() ?: return@post call.respond(HttpStatusCode.BadRequest,PostError.SERVER_ERROR)
         val response = postRepository.getUserPosts(request)
         call.respond(HttpStatusCode.OK, response)
     }

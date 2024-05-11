@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.material
 
 import com.example.data.models.material.MaterialFile
 import com.example.data.models.material.MaterialFolder

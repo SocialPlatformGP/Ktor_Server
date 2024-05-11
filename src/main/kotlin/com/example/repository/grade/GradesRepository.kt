@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.grade
 
 import com.example.data.models.grades.Grades
 import com.example.data.requests.GradesRequest

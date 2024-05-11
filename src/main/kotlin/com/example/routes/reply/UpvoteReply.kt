@@ -1,8 +1,9 @@
 package com.example.routes.reply
 
 import com.example.data.requests.ReplyRequest
-import com.example.repository.ReplyRepository
+import com.example.repository.reply.ReplyRepository
 import com.example.utils.EndPoint
+import com.example.utils.ReplyError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,11 +15,11 @@ fun Route.upvoteReply(
 ) {
     put(EndPoint.Reply.UpvoteReply.route) {
         val request = call.receiveNullable<ReplyRequest.UpvoteRequest>() ?:return@put
-            call.respond(HttpStatusCode.BadRequest, "مش عارف استقبل الjson")
+            call.respond(HttpStatusCode.BadRequest, ReplyError.SERVER_ERROR)
 
         val wasAcknowledged = replyRepository.upvoteReply(request)
         if (!wasAcknowledged) {
-            return@put call.respond(HttpStatusCode.Conflict, message = "Error Upvoting the reply")
+            return@put call.respond(HttpStatusCode.Conflict, ReplyError.SERVER_ERROR)
         }
         call.respond(HttpStatusCode.OK, message = "Reply upvoted successfully")
 

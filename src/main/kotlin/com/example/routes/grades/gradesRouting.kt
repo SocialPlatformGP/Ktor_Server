@@ -1,6 +1,6 @@
 package com.example.routes.grades
 
-import com.example.repository.GradesRepository
+import com.example.repository.grade.GradesRepository
 import io.ktor.server.routing.*
 
 fun Route.gradesRouting(

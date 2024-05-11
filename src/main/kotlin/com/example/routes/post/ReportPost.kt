@@ -1,10 +1,9 @@
 package com.example.routes.post
 
 import com.example.data.requests.PostRequest
-import com.example.data.requests.ReplyRequest
-import com.example.repository.PostRepository
-import com.example.repository.ReplyRepository
+import com.example.repository.post.PostRepository
 import com.example.utils.EndPoint
+import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -17,11 +16,11 @@ fun Route.reportPost(
     post(EndPoint.Chat.Messages.ReportMessage.route) {
         val request = call.receiveNullable<PostRequest.ReportRequest>() ?: return@post call.respond(
             HttpStatusCode.BadRequest,
-            "مش عارف استقبل الjson"
+            PostError.SERVER_ERROR
         )
         val wasAcknowledged = postRepository.reportPost(request)
         if (!wasAcknowledged) {
-            return@post call.respond(HttpStatusCode.Conflict, message = "Error Reporting the post")
+            return@post call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
         }
         call.respond(HttpStatusCode.OK, message = "Post Reported successfully")
     }

@@ -1,6 +1,5 @@
-package com.example.repository
+package com.example.repository.grade
 
-import com.example.data.models.grades.Grade
 import com.example.data.models.grades.Grades
 import com.example.data.models.user.User
 import com.example.data.requests.GradesRequest

@@ -1,4 +1,4 @@
-package com.example.repository
+package com.example.repository.assignment
 
 import com.example.data.models.assignment.Assignment
 import com.example.data.models.assignment.AssignmentAttachment
@@ -6,11 +6,9 @@ import com.example.data.models.assignment.AssignmentEntity
 import com.example.data.models.assignment.UserAssignmentSubmission
 import com.example.data.models.calendar.CalendarEvent
 import com.example.data.models.calendar.CommunityEvents
-import com.example.data.models.calendar.UserEvents
 import com.example.data.models.user.User
 import com.example.data.requests.AssignmentRequest
 import com.example.utils.now
-import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant

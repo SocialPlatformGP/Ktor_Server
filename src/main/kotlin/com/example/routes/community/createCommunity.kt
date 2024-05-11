@@ -1,8 +1,8 @@
 package com.example.routes.community
 
-import com.example.repository.CommunityRepository
+import com.example.repository.community.CommunityRepository
 import com.example.routes.community.request.CommunityRequest
-import com.example.utils.DataError
+import com.example.utils.CommunityError
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,7 +16,7 @@ fun Route.createCommunity(
     post("/createCommunity") {
         val request = call.receiveNullable<CommunityRequest.CreateCommunity>() ?: return@post call.respond(
             HttpStatusCode.BadRequest,
-            DataError.Network.BAD_REQUEST
+            CommunityError.SERVER_ERROR
         )
         val community = commRepo.createCommunity(request)
         call.respond(HttpStatusCode.OK, community)
