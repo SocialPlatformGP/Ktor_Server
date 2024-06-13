@@ -14,14 +14,14 @@ fun Route.getFiles(
     materialRepository: MaterialRepository
 ) {
     post(EndPoint.Media.GetFiles.route) {
-        val request = call.receiveNullable<MaterialRequest.GetMaterialInPath>()
+        val request = call.receiveNullable<MaterialRequest.GetCommunityMaterialInPath>()
         if(request == null){
             println("****************** 00${request}***********************")
             call.respond(HttpStatusCode.BadRequest, MaterialError.SERVER_ERROR)
             return@post
         }
         println("****************** 00${request}***********************")
-        val response = materialRepository.getMaterialResponse(request.path.trim())
+        val response = materialRepository.getMaterialResponse(request.communityId, request.path.trim())
         println("****************** $response***********************")
         call.respond(
             HttpStatusCode.OK,

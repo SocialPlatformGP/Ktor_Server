@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 sealed class MaterialRequest {
     @Serializable
-    data class GetMaterialInPath(val path: String = "") : MaterialRequest()
+    data class GetCommunityMaterialInPath(val communityId: String, val path: String = "") : MaterialRequest()
 
     @Serializable
     data class CreateFolderRequest(

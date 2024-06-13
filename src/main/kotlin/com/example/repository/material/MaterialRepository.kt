@@ -14,6 +14,7 @@ interface MaterialRepository {
         MaterialFile: MaterialFile
     ):MaterialResponse
     suspend fun getMaterialResponse(
+        communityId: String,
         path: String
     ):MaterialResponse
 

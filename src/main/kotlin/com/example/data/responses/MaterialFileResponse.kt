@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MaterialFileResponse(
     val name: String="",
+    val size: String = "",
     val type: String="",
     val url: String="",
     val createdAt: LocalDateTime? = null,

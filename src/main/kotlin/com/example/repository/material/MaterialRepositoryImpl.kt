@@ -4,6 +4,7 @@ import com.example.data.models.material.MaterialFile
 import com.example.data.models.material.MaterialFolder
 import com.example.data.requests.MaterialRequest
 import com.example.data.responses.MaterialResponse
+import com.mongodb.client.model.Filters.and
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 
@@ -18,8 +19,8 @@ class MaterialRepositoryImpl(
     ): MaterialResponse.GetMaterialResponses {
        val success =  materialFolders.insertOne(materialFolder).wasAcknowledged()
         return if(success){
-            val files = materialFiles.find(MaterialFile::path eq materialFolder.path).toList()
-            val folders = materialFolders.find(MaterialFolder::path eq materialFolder.path).toList()
+            val files = materialFiles.find(and(MaterialFile::path eq materialFolder.path, MaterialFile::communityId eq materialFolder.communityId)).toList()
+            val folders = materialFolders.find(and(MaterialFolder::path eq materialFolder.path,MaterialFolder::communityId eq materialFolder.communityId)).toList()
 
             MaterialResponse.GetMaterialResponses(
                 files.map { it.toResponse() },
@@ -33,8 +34,8 @@ class MaterialRepositoryImpl(
     override suspend fun createMaterialFile(materialFile: MaterialFile): MaterialResponse {
         val success =  materialFiles.insertOne(materialFile).wasAcknowledged()
         return if(success){
-            val files = materialFiles.find(MaterialFile::path eq materialFile.path).toList()
-            val folders = materialFolders.find(MaterialFolder::path eq materialFile.path).toList()
+            val files = materialFiles.find(and(MaterialFile::path eq materialFile.path, MaterialFile::communityId eq materialFile.communityId)).toList()
+            val folders = materialFolders.find(and(MaterialFolder::path eq materialFile.path, MaterialFolder::communityId eq materialFile.communityId)).toList()
             MaterialResponse.GetMaterialResponses(
                 files.map { it.toResponse() },
                 folders.map { it.toResponse() }
@@ -44,10 +45,9 @@ class MaterialRepositoryImpl(
         }
     }
 
-    override suspend fun getMaterialResponse(path: String): MaterialResponse {
-
-        val materialFile = materialFiles.find(MaterialFile::path eq path).toList()
-        val materialFolder = materialFolders.find(MaterialFolder::path eq path).toList()
+    override suspend fun getMaterialResponse(communityId: String, path: String): MaterialResponse {
+        val materialFile = materialFiles.find(and(MaterialFile::path eq path, MaterialFile::communityId eq communityId)).toList()
+        val materialFolder = materialFolders.find(and(MaterialFolder::path eq path), MaterialFile::communityId eq communityId).toList()
 
         return MaterialResponse.GetMaterialResponses(
             materialFile.map { it.toResponse() },

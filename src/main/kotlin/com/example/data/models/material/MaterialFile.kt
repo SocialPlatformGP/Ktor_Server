@@ -12,6 +12,7 @@ import org.bson.types.ObjectId
 data class MaterialFile(
     val communityId: String="",
     val name: String="",
+    val size: String = "",
     val type: String="",
     val url: String="",
     val path : String = "",
@@ -23,6 +24,7 @@ data class MaterialFile(
     fun toResponse() = MaterialFileResponse(
         name = name,
         type = type,
+        size = size,
         url = url,
         createdAt = createdAt,
         id = id,
