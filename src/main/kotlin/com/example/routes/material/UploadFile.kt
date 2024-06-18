@@ -51,5 +51,5 @@ fun sizeToString(sizeInBytes: Int): String{
     if (sizeInBytes <= 0) return "0 B"
     if(sizeInBytes < 1024) return "1 KB"
     val digitGroups = (log10(sizeInBytes.toDouble()) / log10(1024.0)).toInt()
-    return "%.1f %s".format((sizeInBytes / 1024.0.pow(digitGroups.toDouble())).roundToInt(), units[digitGroups])
+    return "%d %s".format((sizeInBytes / 1024.0.pow(digitGroups.toDouble())).roundToInt(), units[digitGroups])
 }
