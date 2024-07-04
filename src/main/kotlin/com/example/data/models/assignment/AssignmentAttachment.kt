@@ -26,7 +26,7 @@ data class UserAssignmentSubmission(
     val userId: String,
     val userName: String = "",
     val attachments: List<AssignmentAttachment>,
-    val submittedAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
+    val submittedAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds(),
     val grade: Int = 0,
     val feedback: String = "",
     val isReviewed: Boolean = false,

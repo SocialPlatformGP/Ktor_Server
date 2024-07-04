@@ -28,4 +28,6 @@ sealed interface AssignmentRequest {
         val grade: Int,
         val feedback: String
     ): AssignmentRequest
+    @Serializable
+    data class TurnInAssignments(val userAssignmentId: String, val assignmentId: String): AssignmentRequest
 }
