@@ -15,7 +15,7 @@ data class Post(
     val authorName: String = "",
     val authorPfp: String = "",
     val authorID: String = "",
-    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
+    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds(),
     val title: String = "",
     val body: String = "",
     val votes: Int = 0,
