@@ -1,5 +1,6 @@
 package com.example.routes.assignment
 
+import com.example.data.requests.AssignmentRequest
 import com.example.repository.assignment.AssignmentRepository
 import com.example.utils.AssignmentError
 import io.ktor.http.*
@@ -12,13 +13,16 @@ fun Route.turnInAssignment(
     assignmentRepository: AssignmentRepository
 ){
     post("turnInAssignment"){
-        val request = call.receiveNullable<String>()?: return@post call.respond(HttpStatusCode.BadRequest,AssignmentError.SERVER_ERROR)
-        val canSubmit = assignmentRepository.canSubmit(request)
+        val request = call.receiveNullable<AssignmentRequest.TurnInAssignments>()?: return@post call.respond(HttpStatusCode.BadRequest,AssignmentError.SERVER_ERROR)
+        val canSubmit = assignmentRepository.canSubmit(request.assignmentId)
+        println("-=====================================-")
+        println("canSubmit: $request")
+        println("canSubmit: $canSubmit")
         if(canSubmit.not()){
             call.respond(HttpStatusCode.RequestTimeout,AssignmentError.SERVER_ERROR)
             return@post
         }
-        val result = assignmentRepository.turnInAssignment(request)
+        val result = assignmentRepository.turnInAssignment(request.userAssignmentId)
         if(result){
             call.respond(HttpStatusCode.OK)
         }else{

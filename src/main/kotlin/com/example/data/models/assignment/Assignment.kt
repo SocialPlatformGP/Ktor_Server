@@ -17,13 +17,13 @@ data class Assignment(
     val maxPoints: Int = 10,
     val dueDate: Long = 0,
     val acceptLateSubmissions: Boolean = false,
-    val createdAt: Long =  0,
+    val createdAt: Long = 0,
     val creatorId: String = "",
-    val creatorName:String = "",
+    val creatorName: String = "",
     val communityId: String = "",
-){
+) {
 
-    fun toEntity()  : AssignmentEntity {
+    fun toEntity(): AssignmentEntity {
 
         return AssignmentEntity(
             title = title,
@@ -34,10 +34,11 @@ data class Assignment(
             acceptLateSubmissions = acceptLateSubmissions,
             creatorId = creatorId,
             communityId = communityId
-        )
+        ).copy(id = ObjectId().toString())
     }
 
 }
+
 @Serializable
 data class AssignmentEntity(
     val title: String = "",
@@ -48,11 +49,11 @@ data class AssignmentEntity(
     val maxPoints: Int = 10,
     val dueDate: Long = 0,
     val acceptLateSubmissions: Boolean = false,
-    val createdAt: Long =  LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
+    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds(),
     val creatorId: String = "",
-    val creatorName:String = "",
+    val creatorName: String = "",
     val communityId: String = "",
-){
+) {
     fun toModel() = Assignment(
         title = title,
         description = description,
