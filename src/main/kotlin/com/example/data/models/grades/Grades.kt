@@ -18,4 +18,5 @@ data class Grades(
 data class Grade(
     val topic : String = "",
     val grade : Int = 0,
+    val maxPoints : Int = 0,
 )

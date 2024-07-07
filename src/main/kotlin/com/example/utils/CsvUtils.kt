@@ -46,7 +46,7 @@ object CsvUtils {
                 writer.append("${record.userName} ,${record.grade.joinToString(",") { it }}\n")
             }
         }
-        val data =readExcelFileToUsers("test.xlsx")
+        val data =readExcelFileToUsers("Book1.xlsx")
         data.forEach { println(it) }
 
     }
@@ -64,16 +64,19 @@ object CsvUtils {
         for (cell in headerRow) {
             when (cell.stringCellValue) {
                 "ID" -> idIndex = cell.columnIndex
-                "Student Name" -> nameIndex = cell.columnIndex
+                "ST_NAME" -> nameIndex = cell.columnIndex
                 else -> gradeIndices.add(cell.columnIndex)
             }
         }
+        println("idIndex: $idIndex, nameIndex: $nameIndex, gradeIndices: $gradeIndices")
 
         for (row in sheet) {
             if (row.rowNum == 0) continue // Skip header row
 
             val idCell = row.getCell(idIndex)
             val nameCell = row.getCell(nameIndex)
+            println("idCell: $idCell, nameCell: $nameCell")
+            if(idCell == null && nameCell == null) continue
 
             if (idCell.cellType == CellType.NUMERIC && nameCell.cellType == CellType.STRING) {
                 val gradeList = gradeIndices.mapNotNull { index ->
@@ -81,7 +84,8 @@ object CsvUtils {
                     if (gradeCell.cellType == CellType.NUMERIC) {
                         Grade(
                             grade = gradeCell.numericCellValue.toInt(),
-                            topic = headerRow.getCell(index).stringCellValue
+                            topic = headerRow.getCell(index).stringCellValue,
+                            maxPoints = headerRow.getCell(index).stringCellValue.split(" ").last().replace("[","").replace("]","").toInt()
                         )
                     } else null
                 }

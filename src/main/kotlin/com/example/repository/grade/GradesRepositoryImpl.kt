@@ -17,24 +17,31 @@ class GradesRepositoryImpl(
         val oldGrades = gradesDb.find(Grades::userId `in` users).toList()
         if(grades.map{it.course}.intersect(oldGrades.map { it.course }).size == 0){
             gradesDb.insertMany(grades)
+            println("insert many")
         }
-        grades.forEach { newGrade ->
-            val oldGrade = oldGrades.find { it.userId == newGrade.userId }
-            if (oldGrade != null) {
-                val result = oldGrade.grade.map {old->
-                    val new = newGrade.grade.find {it.topic == old.topic}
-                        if(new != null){
-                            old.copy(grade =new.grade)
-                        }
-                        else{
+        else {
+            grades.forEach { newGrade ->
+                val oldGrade = oldGrades.find { it.userId == newGrade.userId }
+                if (oldGrade != null) {
+                    var result = oldGrade.grade.map { old ->
+                        val new = newGrade.grade.find { it.topic == old.topic }
+                        if (new != null) {
+                            println("update grade ${old.topic} with ${new.grade}")
+                            old.copy(grade = new.grade)
+                        } else {
                             old
                         }
-
+                    }.toMutableList()
+                    for(grade in newGrade.grade){
+                        if(oldGrade.grade.find { it.topic == grade.topic } == null){
+                            result.plus(grade)
+                        }
+                    }
+                    gradesDb.updateOne(Grades::id eq oldGrade.id, oldGrade.copy(grade = result))
+                        .wasAcknowledged()
+                } else {
+                    gradesDb.insertOne(newGrade).wasAcknowledged()
                 }
-                gradesDb.updateOne(Grades::id eq oldGrade.id, oldGrade.copy(grade = result))
-                    .wasAcknowledged()
-            } else {
-                gradesDb.insertOne(newGrade).wasAcknowledged()
             }
         }
         return true
