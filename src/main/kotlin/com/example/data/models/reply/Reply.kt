@@ -19,14 +19,15 @@ data class Reply (
     val content: String = "",
     val votes: Int = 0,
     val depth: Int = 0,
-    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds,
+    val createdAt: Long = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds(),
     val deleted: Boolean = false,
     val upvoted: List<String> = emptyList(),
     val downvoted: List<String> = emptyList(),
     val authorName: String = "",
     val authorImageLink: String = "",
     val collapsed: Boolean = false,
-    val editStatus: Boolean = false
+    val editStatus: Boolean = false,
+    val moderationStatus: String = "SAFE"
 ){
     fun toResponse(): ReplyResponse = ReplyResponse(
         id = id,
@@ -43,6 +44,7 @@ data class Reply (
         authorName = authorName,
         authorImageLink = authorImageLink,
         collapsed = collapsed,
-        editStatus = editStatus
+        editStatus = editStatus,
+        moderationStatus = moderationStatus
     )
 }

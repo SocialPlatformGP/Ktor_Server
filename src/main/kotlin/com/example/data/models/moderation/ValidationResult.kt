@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ValidationResult(
     val label: String,
-    val score: Double
+    val score: Double,
 )

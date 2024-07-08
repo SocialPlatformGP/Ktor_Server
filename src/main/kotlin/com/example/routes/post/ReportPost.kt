@@ -2,7 +2,6 @@ package com.example.routes.post
 
 import com.example.data.requests.PostRequest
 import com.example.repository.post.PostRepository
-import com.example.utils.EndPoint
 import com.example.utils.PostError
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -13,15 +12,13 @@ import io.ktor.server.routing.*
 fun Route.reportPost(
     postRepository: PostRepository
 ) {
-    post(EndPoint.Chat.Messages.ReportMessage.route) {
+    post("reportPost") {
         val request = call.receiveNullable<PostRequest.ReportRequest>() ?: return@post call.respond(
             HttpStatusCode.BadRequest,
             PostError.SERVER_ERROR
         )
-        val wasAcknowledged = postRepository.reportPost(request)
-        if (!wasAcknowledged) {
-            return@post call.respond(HttpStatusCode.Conflict, PostError.SERVER_ERROR)
-        }
-        call.respond(HttpStatusCode.OK, message = "Post Reported successfully")
+        println("reportPost called: $request")
+        postRepository.reportPost(request)
+        call.respond(HttpStatusCode.OK, "we will review the post and take necessary actions.")
     }
 }

@@ -12,5 +12,5 @@ interface ReplyRepository {
 
     suspend fun upvoteReply(request: ReplyRequest.UpvoteRequest): Boolean
     suspend fun downvoteReply(request: ReplyRequest.DownvoteRequest): Boolean
-    suspend fun reportReply(request: ReplyRequest.ReportRequest): Boolean
+    suspend fun reportReply(request: ReplyRequest.ReportRequest)
 }

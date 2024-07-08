@@ -17,8 +17,8 @@ class ContentModerationRemoteDataSourceImpl(
                 endPoint("validate-text")
                 parameter("text", text)
                 timeout {
-                    requestTimeoutMillis = 0
-                    socketTimeoutMillis = 0
+                    requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+                    socketTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
                 }
             }
             if(request.status == HttpStatusCode.OK) {
@@ -41,8 +41,8 @@ class ContentModerationRemoteDataSourceImpl(
                 endPoint("validate-image")
                 parameter("url", url)
                 timeout {
-                    requestTimeoutMillis = 0
-                    socketTimeoutMillis = 0
+                    requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+                    socketTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
                 }
             }
             if(request.status == HttpStatusCode.OK) {
@@ -63,7 +63,7 @@ class ContentModerationRemoteDataSourceImpl(
 
 private fun HttpRequestBuilder.endPoint(path: String) {
     url {
-        takeFrom("http://192.168.1.7:8000/")
+        takeFrom("http://127.0.0.1:8000/")
         path(path)
         contentType(ContentType.Application.Json)
     }

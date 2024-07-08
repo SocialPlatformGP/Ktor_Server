@@ -1,10 +1,18 @@
 package com.example.repository.reply
 
 import com.example.data.models.post.Post
+import com.example.data.models.post.now
 import com.example.data.models.reply.Reply
 import com.example.data.requests.ReplyRequest
 import com.example.data.responses.ReplyResponse
 import com.example.data.source.remote.ContentModerationRemoteDataSource
+import com.example.utils.Constants
+import com.example.utils.MimeType
+import com.example.utils.ModerationSafety
+import com.example.utils.inappropriateWords
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.litote.kmongo.addToSet
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
@@ -126,10 +134,23 @@ class ReplyRepositoryImpl(
         }
     }
 
-    override suspend fun reportReply(request: ReplyRequest.ReportRequest): Boolean {
-        val reply = replyCollection.findOne(Reply::id eq request.replyId) ?: return false
-        val result = moderationRemoteSSource.validateText(reply.content)
-        println("\n\n\n\n\n\nresult: $result\n\n\n\n\n\n")
-        return true
+    override suspend fun reportReply(request: ReplyRequest.ReportRequest) {
+        val reply = replyCollection.findOne(Reply::id eq request.replyId) ?: return
+        println(reply)
+        val titleResult = moderationRemoteSSource.validateText(reply.content)
+        val titleLabel = titleResult?.result?.first()?.label
+        val titleScore = titleResult?.result?.first()?.score
+        println(titleResult)
+        if (
+            (titleLabel == "LABEL_1" && titleScore!! > 0.85)
+            || reply.content.split(" ").any { it in inappropriateWords }
+        ) {
+            replyCollection.updateOne(
+                Reply::id eq request.replyId,
+                reply.copy(
+                    moderationStatus = ModerationSafety.UNSAFE_REPLY.name,
+                )
+            )
+        }
     }
 }

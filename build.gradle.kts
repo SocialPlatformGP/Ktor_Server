@@ -83,19 +83,13 @@ dependencies {
     implementation("io.swagger.core.v3:swagger-models:2.1.10")
     implementation("io.swagger.core.v3:swagger-integration:2.1.10")
 
-    //
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.8")
     implementation("com.google.firebase:firebase-admin:9.0.0")
 
-    //
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3") // for JVM platform
-
     implementation ("com.itextpdf:itextpdf:5.5.13")
     implementation("org.apache.poi:poi-ooxml:5.1.0")
-
-
-
 }
 tasks {
     create("stage").dependsOn("installDist")

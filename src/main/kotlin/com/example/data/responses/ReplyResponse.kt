@@ -17,7 +17,8 @@ data class ReplyResponse(
     val authorName: String = "",
     val authorImageLink: String = "",
     val collapsed: Boolean = false,
-    val editStatus: Boolean = false
+    val editStatus: Boolean = false,
+    val moderationStatus: String = "SAFE"
 ) {
     fun toEntity(): Reply = Reply(
         authorID = authorID,
@@ -33,6 +34,7 @@ data class ReplyResponse(
         authorName = authorName,
         authorImageLink = authorImageLink,
         collapsed = collapsed,
-        editStatus = editStatus
+        editStatus = editStatus,
+        moderationStatus = moderationStatus
     )
 }

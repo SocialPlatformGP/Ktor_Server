@@ -9,6 +9,9 @@ import com.example.data.requests.UpdateOrDeletePostRequest
 import com.example.data.responses.PostResponse
 import com.example.data.source.remote.ContentModerationRemoteDataSource
 import com.example.utils.Constants
+import com.example.utils.MimeType
+import com.example.utils.ModerationSafety
+import com.example.utils.inappropriateWords
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -28,17 +31,60 @@ class PostRepositoryImpl(
 
     }
 
-    override suspend fun reportPost(request: PostRequest.ReportRequest): Boolean {
-        val post = postCollection.findOne(Post::id eq request.postId) ?: return false
+    override suspend fun reportPost(request: PostRequest.ReportRequest) {
+        val post = postCollection.findOne(Post::id eq request.postId) ?: return
+        println(post)
         val titleResult = moderationRemoteSSource.validateText(post.title)
-        println("\n\n\n\n\n\ntitle result: $titleResult\n\n\n\n\n\n")
-        val bodyResult = moderationRemoteSSource.validateText(post.body)
-        println("\n\n\n\n\n\nbody result: $bodyResult\n\n\n\n\n\n")
-        post.attachments.filter { it.type == "image" }.forEach {
-            val imageResult = moderationRemoteSSource.validateImage("${ Constants.BASE_URL }${it.url}")
-            println("\n\n\n\n\n\nimage ${it.name} result: $imageResult\n\n\n\n\n\n")
+        val titleLabel = titleResult?.result?.first()?.label
+        val titleScore = titleResult?.result?.first()?.score
+        println(titleResult)
+        if (
+            (titleLabel == "LABEL_1" && titleScore!! > 0.85)
+            || post.title.split(" ").any { it in inappropriateWords }
+        ) {
+            postCollection.updateOne(
+                Post::id eq request.postId,
+                post.copy(
+                    moderationStatus = ModerationSafety.UNSAFE_TITLE.name,
+                    lastModified = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds()
+                )
+            )
         }
-        return true
+
+        val bodyResult = moderationRemoteSSource.validateText(post.body)
+        val bodyLabel = bodyResult?.result?.first()?.label
+        val bodyScore = bodyResult?.result?.first()?.score
+        println(bodyResult)
+//        fun areWordsSimilar(word1: String, word2: String): Boolean {
+//            return word1 in word2 || word2 in word1 || word1.commonPrefixWith(word2).length >= 3
+//        }
+        if (
+            bodyLabel == "LABEL_1" && bodyScore!! > 0.85
+            || post.title.split(" ").any { it in inappropriateWords }
+        ) {
+            postCollection.updateOne(
+                Post::id eq request.postId,
+                post.copy(
+                    moderationStatus = ModerationSafety.UNSAFE_BODY.name,
+                    lastModified = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds()
+                )
+            )
+        }
+
+        post.attachments.filter { MimeType.getMimeTypeFromFileName(it.name) is MimeType.Image }.forEach {
+            val imageResult = moderationRemoteSSource.validateImage("${Constants.BASE_URL}${it.url}")
+            val imageLabel = imageResult?.result?.filter { it.label == "nsfw" }
+            if (imageLabel?.first()?.score!! > 0.5) {
+                postCollection.updateOne(
+                    Post::id eq request.postId,
+                    post.copy(
+                        moderationStatus = ModerationSafety.UNSAFE_IMAGE.name,
+                        lastModified = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds()
+                    )
+                )
+            }
+
+        }
     }
 
     override suspend fun updatePost(postRequest: PostRequest.UpdateRequest): Boolean {
@@ -73,7 +119,7 @@ class PostRepositoryImpl(
         if (postRequest.userId.isBlank()) {
             return PostResponse()
         }
-        val post = postCollection.findOne(Post::id eq postRequest.postId)?: return PostResponse()
+        val post = postCollection.findOne(Post::id eq postRequest.postId) ?: return PostResponse()
         println(post)
         val userAlreadyVoted = post.upvoted.contains(postRequest.userId)
         println(userAlreadyVoted)
@@ -106,7 +152,7 @@ class PostRepositoryImpl(
                         Post::votes, post.votes + 2
                     )
                 )
-            }else {
+            } else {
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
                     setValue(
@@ -131,7 +177,7 @@ class PostRepositoryImpl(
         if (postRequest.userId.isBlank()) {
             return PostResponse()
         }
-        val post = postCollection.findOne(Post::id eq postRequest.postId)?: return PostResponse()
+        val post = postCollection.findOne(Post::id eq postRequest.postId) ?: return PostResponse()
         println(post)
         val userAlreadyVoted = post.downvoted.contains(postRequest.userId)
         println(userAlreadyVoted)
@@ -163,8 +209,7 @@ class PostRepositoryImpl(
                         Post::votes, post.votes - 2
                     )
                 )
-            }
-            else {
+            } else {
                 postCollection.updateOne(
                     Post::id eq postRequest.postId,
                     setValue(
