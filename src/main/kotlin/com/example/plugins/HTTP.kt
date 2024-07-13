@@ -16,7 +16,7 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Patch)
         allowCredentials = true
         allowNonSimpleContentTypes = true
-        allowHost("localhost:27017")
+        allowHost("0.0.0.0:27017/")
         allowXHttpMethodOverride()
         allowSameOrigin = true
 

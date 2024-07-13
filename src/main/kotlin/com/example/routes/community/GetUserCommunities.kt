@@ -17,6 +17,7 @@ fun Route.getUserCommunities(
     post("/getUserCommunities") {
         val userId = call.receiveNullable<String>()?: return@post call.respond(HttpStatusCode.BadRequest,CalendarError.SERVER_ERROR)
         val result = commRepo.getUserCommunities(userId)
+        println("\n\n\n\n\n\\User communities: $result\n\n\n\n\n")
         call.respond(HttpStatusCode.OK,result)
     }
 }

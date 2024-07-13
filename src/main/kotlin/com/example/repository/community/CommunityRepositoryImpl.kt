@@ -26,9 +26,11 @@ class CommunityRepositoryImpl(db: CoroutineDatabase) : CommunityRepository {
     }
 
     override suspend fun getUserCommunities(userId: String): List<Community> {
+        println("\n\n\n\n" + userId + "\n\n\n\n")
         val result = userCommunities.findOne(UserCommunities::id eq userId)?.groups?.mapNotNull { commId ->
             communities.findOne(CommunityEntity::id eq commId)?.toCommunity()
         }
+        println("\n\n\n\n" + result + "\n\n\n\n")
         return result ?: emptyList()
     }
 

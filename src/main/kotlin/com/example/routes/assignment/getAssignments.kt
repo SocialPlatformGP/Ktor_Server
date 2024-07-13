@@ -20,6 +20,7 @@ fun Route.getAssignments(
         val result  = mutableListOf<Assignment>()
         userCommunities.map {
             assignmentRepository.getAssignments(it.id).let {assignments->
+                println("\n\n\n\nAssignments: $assignments")
                 result.addAll(assignments)
             }
         }

@@ -109,7 +109,7 @@ class AssignmentRepositoryImpl(db: CoroutineDatabase) : AssignmentRepository {
             UserAssignmentSubmission::id eq request,
             userAssignment.copy(
                 isTurnedIn = true,
-                submittedAt = LocalDateTime.now().toInstant(TimeZone.UTC).epochSeconds
+                submittedAt = LocalDateTime.now().toInstant(TimeZone.UTC).toEpochMilliseconds()
             )
         ).wasAcknowledged()
     }

@@ -17,18 +17,22 @@ fun Route.joinCommunity(
             ?: return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         val validCode = commRepo.checkCode(request)
         if (!validCode) {
+            println("Invalid code")
             return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         }
         val validDomain = commRepo.checkCommunityDomain(request)
         if (!validDomain) {
+            println("Invalid domain")
             return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         }
         val alreadyMember = commRepo.isAlreadyMember(request)
         if (alreadyMember) {
+            println("Already member")
             return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         }
         val requestExist = commRepo.isRequestExist(request)
         if (requestExist) {
+            println("Request exist")
             return@post call.respond(HttpStatusCode.BadRequest, CommunityError.SERVER_ERROR)
         }
         val requireApproval = commRepo.isrequireApproval(request)

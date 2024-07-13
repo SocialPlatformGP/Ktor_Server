@@ -19,7 +19,6 @@ import com.example.repository.reply.ReplyRepositoryImpl
 import com.example.repository.user.AuthRepository
 import com.example.repository.user.AuthRepositoryImpl
 import io.ktor.client.*
-import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -44,10 +43,7 @@ val appModule = module {
                     encodeDefaults = true
                 })
             }
-            install(HttpTimeout) {
-                requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
-                socketTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
-            }
+//
         }
     }
     single<ContentModerationRemoteDataSource> { ContentModerationRemoteDataSourceImpl(get()) }
